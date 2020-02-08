@@ -3,7 +3,8 @@
     <main class="flex-container">
         <Sidebar>
             <h2 class="app-name">{{ appName }}</h2>
-            
+            <List :items="categories" title="Kategorie"></List>
+            <List :items="lists" title="Listy"></List>
         </Sidebar>
         <Content>
             
@@ -15,12 +16,28 @@
 <script>
 import Sidebar from  './components/Sidebar.vue'
 import Content from './components/Content.vue'
+import List from './components/List.vue'
 
 export default {
     name: 'App',
     components: {
         Sidebar,
-        Content
+        Content,
+        List
+    },
+    data() {
+        return {
+            categories: [
+                {name: "Owoce", size: 3},
+                {name: "Elektronika", size: 15},
+                {name: "Napoje", size: 6}
+            ],
+            lists: [
+                {name: "Lista 1", size: 2},
+                {name: "Codzienna", size: 0}
+            ],
+            appName: "ShoppingList"
+        }
     }
 }
 </script>
