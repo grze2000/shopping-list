@@ -2,7 +2,7 @@
     <div>
         <h4 class="list-title">{{ title }}</h4>
         <ul class="list">
-            <li v-for="item in items" :key="item">{{ item.name }}<span>{{ item.size }}</span></li>
+            <li v-for="item in items" :key="item.id">{{ item.name }}<span>{{ item.size }}</span></li>
         </ul>
     </div>
 </template>

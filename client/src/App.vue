@@ -7,7 +7,7 @@
             <List :items="lists" title="Listy"></List>
         </Sidebar>
         <Content>
-            
+            <ProductList :products="lists[0].items"></ProductList>
         </Content>
     </main>
   </div>
@@ -17,26 +17,38 @@
 import Sidebar from  './components/Sidebar.vue'
 import Content from './components/Content.vue'
 import List from './components/List.vue'
+import ProductList from './components/ProductList.vue'
 
 export default {
     name: 'App',
     components: {
         Sidebar,
         Content,
-        List
+        List,
+        ProductList
     },
     data() {
         return {
             categories: [
-                {name: "Owoce", size: 3},
-                {name: "Elektronika", size: 15},
-                {name: "Napoje", size: 6}
+                {id: 3, name: 'Owoce', size: 3},
+                {id: 4, name: 'Elektronika', size: 15},
+                {id: 5, name: 'Napoje', size: 6}
             ],
             lists: [
-                {name: "Lista 1", size: 2},
-                {name: "Codzienna", size: 0}
+                {id: 1, name: 'Lista 1', size: 2, items: [
+                    {
+                        name: 'Akumulator Li-Pol 1200mAh',
+                        price: 20.02
+                    },
+                    {
+                        name: 'Moduł 3 w 1 - akcelerometr, żyroskop i magnetometr',
+                        price: 30.99
+                    }
+                ]},
+                {id: 2, name: 'Codzienna', size: 0}
             ],
-            appName: "ShoppingList"
+            appName: 'ShoppingList',
+            selected: 0
         }
     }
 }

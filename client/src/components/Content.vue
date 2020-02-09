@@ -14,7 +14,7 @@ export default {
     .content {
         width: 80%;
         height: 100vh;
-        padding: 15px 10px;
+        padding: 15px;
         box-sizing: border-box;
         background-color: #eee;
     }
