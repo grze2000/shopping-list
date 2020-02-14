@@ -16,6 +16,5 @@ export default {
         height: 100vh;
         padding: 15px;
         box-sizing: border-box;
-        background-color: #eee;
     }
 </style>
