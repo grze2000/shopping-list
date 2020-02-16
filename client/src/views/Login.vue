@@ -2,15 +2,15 @@
     <div>
         <form @submit.prevent="onSubmit">
             <div class="form-group">
-                <input type="text" name="login.username" placeholder="Email" v-model.trim="login.email"/>
+                <input type="email" placeholder="Email" v-model.trim="login.email"/>
             </div>
             <div class="form-group">
-                <input type="password" name="password" placeholder="Hasło" v-model.trim="login.password"/>
+                <input type="password" placeholder="Hasło" v-model.trim="login.password"/>
             </div>
             <div class="form-group">
                 <input type="submit" value="Zaloguj się">
             </div>
-            <div class="form-gorup" v-if="error != ''">
+            <div class="form-gorup" v-if="error !== ''">
                 {{ error.data.message }}
             </div>
             Nie masz konta? <a href="#" @click.prevent="register()">Zarejestruj się</a>
@@ -32,7 +32,7 @@ export default {
     methods: {
         onSubmit(e) {
             e.preventDefault();
-            axios.post('http://localhost:3000/login', this.login)
+            axios.post(`${process.env.VUE_APP_API_URL}/login`, this.login)
             .then(response => {
                 localStorage.setItem('jwtToken', response.data.token);
                 this.$router.push('/');

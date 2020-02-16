@@ -26,8 +26,10 @@ app.use(function(req, res, next) {
   });
 
 app.post('/register', (req, res) => {
-    if(!req.body.email || !req.body.password) {
-        res.status(500).json({success: false, message: 'Podaj prawidłowy email i hasło'});
+    if(!req.body.email || !req.body.password || !req.body.passwordRepeat) {
+        res.status(400).json({success: false, message: 'Podaj prawidłowy email i hasło'});
+    } else if(req.body.password !== req.body.passwordRepeat) {
+        res.status(400).json({success: false, message: 'Podane hasła nie są takie same'});
     } else {
         var newUser = User({
             email: req.body.email,
@@ -35,9 +37,9 @@ app.post('/register', (req, res) => {
         });
         newUser.save((err) => {
             if(err) {
-                return res.json({success: false, message: 'Taki użytkonik już istnieje'});
+                return res.status(400).json({success: false, message: 'Taki użytkonik już istnieje'});
             }
-            res.json({success: true, message: 'Pomyślnie utworzono uzytkownika'});
+            res.status(201).json({success: true, message: 'Pomyślnie utworzono uzytkownika'});
         });
     }
 });
