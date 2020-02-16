@@ -17,6 +17,13 @@ mongoose.connect(process.env.MONGODB_URI, {useUnifiedTopology: true, useNewUrlPa
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", process.env.CLIENT_DOMAIN);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 app.post('/register', (req, res) => {
     if(!req.body.email || !req.body.password) {
@@ -47,7 +54,7 @@ app.post('/login', (req, res) => {
                     const token = jwt.sign(user.toJSON(), process.env.SECRET);
                     res.json({success: true, token: token});
                 } else {
-                    res.status(401).send({success: false, message: 'Nieprawidłowe hasło'});
+                    res.status(401).json({success: false, message: 'Nieprawidłowe hasło'});
                 }
             });
         }
