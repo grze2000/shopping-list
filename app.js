@@ -19,11 +19,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", process.env.CLIENT_DOMAIN);
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
-  });
+});
 
 app.post('/register', (req, res) => {
     if(!req.body.email || !req.body.password || !req.body.passwordRepeat) {
@@ -53,8 +53,8 @@ app.post('/login', (req, res) => {
         } else {
             user.comparePassword(req.body.password, (err, isMatch) => {
                 if(!err && isMatch) {
-                    const token = jwt.sign(user.toJSON(), process.env.SECRET);
-                    res.json({success: true, token: token});
+                    const token = jwt.sign({id: user._id}, process.env.SECRET);
+                    res.json({success: true, token: 'JWT ' + token});
                 } else {
                     res.status(401).json({success: false, message: 'Nieprawidłowe hasło'});
                 }
