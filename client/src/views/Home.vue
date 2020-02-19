@@ -1,7 +1,7 @@
 <template>
     <main class="flex-container">
         <Sidebar>
-            <h2 class="app-name">{{ appName }}</h2>
+            <h2 class="app-name">{{ appName }}</h2><button @click="logout()">Wyloguj się</button>
             <List :items="categories" title="Kategorie"></List>
             <List :items="lists" title="Listy"></List>
         </Sidebar>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Sidebar from  '../components/Sidebar.vue'
 import Content from '../components/Content.vue'
 import List from '../components/List.vue'
@@ -47,6 +48,22 @@ export default {
             ],
             appName: 'ShoppingList',
             selected: 0
+        }
+    },
+    created() {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+        axios.get(`${process.env.VUE_APP_API_URL}/lists`)
+        .then(response => {
+            this.lists = response.data;
+        })
+        .catch(err => {
+            this.$router.push('/login');
+        });
+    },
+    methods: {
+        logout() {
+            localStorage.removeItem('jwtToken');
+            this.$router.push('/login');
         }
     }
 }
