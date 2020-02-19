@@ -2,6 +2,22 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
+const itemSchema = new Schema({
+    name: {
+       type: String,
+       required: true
+   },
+   price: Number
+},{_id: true});
+
+const listSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    items: [itemSchema]
+});
+
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -10,8 +26,10 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    lists: [listSchema]
 });
+
 UserSchema.pre('save', function(next) {
     var user = this;
 
