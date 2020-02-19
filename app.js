@@ -63,5 +63,43 @@ app.post('/login', (req, res) => {
     });
 });
 
+app.get('/user', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const userInfo = (({_id, email, ...other}) => ({_id, email}))(req.user);
+    res.json(userInfo);
+});
+
+app.get('/lists', passport.authenticate('jwt', {session: false}), (req, res) => {
+    res.json(req.user.lists.map(x => ({id: x._id, name: x.name})));
+});
+
+app.post('/lists', passport.authenticate('jwt', {session: false}), (req, res) => {
+    if(req.body.name) {
+        if(/^[a-zA-Z0-9 \.!?,:;\-&]+$/.test(req.body.name)) {
+            req.user.lists.push({
+                name: req.body.name,
+                items: []
+            });
+            req.user.save(err => {
+                if(err) {
+                    res.status(500).json({message: 'Nie udało się utworzyć listy'});
+                } else {
+                    res.status(201).json(req.user.lists);
+                }
+            });
+        } else {
+            res.status(400).json({message: 'Nazwa zawiera niedozwolone znaki'});
+        }
+    } else {
+        res.status(400).json({message: 'Nie podano nazwy listy'});
+    }
+});
+
+app.delete('/lists/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    req.user.lists = req.user.lists.filter(list => !list._id.equals(req.params.id));
+    req.user.save(err => {
+        err ? res.sendStatus(500) : res.sendStatus(200);
+    });
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on ${port}`));
