@@ -2,7 +2,7 @@
     <div>
         <h4 class="list-title">{{ title }}</h4>
         <ul class="list">
-            <li v-for="item in items" :key="item.id">{{ item.name }}<span>{{ item.size }}</span></li>
+            <li v-for="item in items" :key="item.id" @click="onClick(item.id)" :class="selected===item.id ? 'active' : ''">{{ item.name }}<span>{{ item.size }}</span></li>
         </ul>
     </div>
 </template>
@@ -10,7 +10,12 @@
 <script>
 export default {
     name: 'list',
-    props: ['title', 'items']
+    props: ['title', 'items', 'selected'],
+    methods: {
+        onClick(itemId) {
+            this.$emit('selectList', itemId);
+        }
+    }
 }
 </script>
 
@@ -40,8 +45,9 @@ export default {
         margin: 25px 0 10px 0;
         padding: 0 10px;
     }
-    .selected { /* to-do */
+    .active {
         color: var(--main-font-color);
+        background-color: var(--main-bg-active-color);
         font-weight: bold;
     }
 </style>

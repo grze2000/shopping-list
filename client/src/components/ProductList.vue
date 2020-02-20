@@ -1,6 +1,6 @@
 <template>
     <section class="product-list-container">
-        <h3 class="product-list-title">List name</h3>
+        <h3 class="product-list-title">{{ title }}</h3>
         <ul class="product-list">
             <li v-for="product in products" :key="product.name">
                 <label :for="product.name">
@@ -14,7 +14,7 @@
 <script>
 export default {
     name: 'ProductList',
-    props: ['products']
+    props: ['title', 'products']
 }
 </script>
 

@@ -3,10 +3,10 @@
         <Sidebar>
             <h2 class="app-name">{{ appName }}</h2><button @click="logout()">Wyloguj się</button>
             <List :items="categories" title="Kategorie"></List>
-            <List :items="lists" title="Listy"></List>
+            <List :items="lists" :selected="selected" @selectList="selectList" title="Listy"></List>
         </Sidebar>
         <Content>
-            <ProductList :products="lists[0].items"></ProductList>
+            <ProductList :title="activeList.name" :products="activeList.items"></ProductList>
         </Content>
     </main>
 </template>
@@ -33,19 +33,11 @@ export default {
                 {id: 4, name: 'Elektronika', size: 15},
                 {id: 5, name: 'Napoje', size: 6}
             ],
-            lists: [
-                {id: 1, name: 'Lista 1', size: 2, items: [
-                    {
-                        name: 'Akumulator Li-Pol 1200mAh',
-                        price: 20.02
-                    },
-                    {
-                        name: 'Moduł 3 w 1 - akcelerometr, żyroskop i magnetometr',
-                        price: 30.99
-                    }
-                ]},
-                {id: 2, name: 'Codzienna', size: 0}
-            ],
+            lists: [],
+            activeList: {
+                name: 'Nie wybrano listy',
+                items: []
+            },
             appName: 'ShoppingList',
             selected: 0
         }
@@ -64,6 +56,16 @@ export default {
         logout() {
             localStorage.removeItem('jwtToken');
             this.$router.push('/login');
+        },
+        selectList(id) {
+            this.selected = id;
+            axios.get(`${process.env.VUE_APP_API_URL}/lists/${id}/items`)
+            .then(response => {
+                this.activeList = response.data;
+            })
+            .catch(err => {
+                alert(err);
+            });
         }
     }
 }

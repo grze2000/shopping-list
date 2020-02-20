@@ -8,6 +8,7 @@
     :root {
         --main-bg-color: #33915d;
         --main-bg-hover-color: #5ea07b;
+        --main-bg-active-color: #4eac78;
         --main-font-color: #ffbb3c;
     } 
     body {
