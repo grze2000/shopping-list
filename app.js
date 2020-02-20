@@ -9,6 +9,8 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('./models/user');
 
+const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]+$/;
+
 mongoose.connect(process.env.MONGODB_URI, {useUnifiedTopology: true, useNewUrlParser: true}).then(() => {
     console.log('Conected to database')
 }).catch((err) => {
@@ -74,7 +76,7 @@ app.get('/lists', passport.authenticate('jwt', {session: false}), (req, res) => 
 
 app.post('/lists', passport.authenticate('jwt', {session: false}), (req, res) => {
     if(req.body.name) {
-        if(/^[a-zA-Z0-9 \.!?,:;\-&]+$/.test(req.body.name)) {
+        if(nameRegex.test(req.body.name)) {
             req.user.lists.push({
                 name: req.body.name,
                 items: []
@@ -114,7 +116,7 @@ app.post('/lists/:listId/items', passport.authenticate('jwt', {session: false}),
     const index = req.user.lists.findIndex(list => list._id.equals(req.params.listId));
     if(index !== -1) {
         if(req.body.name) {
-            if(/^[a-zA-Z0-9 \.!?,:;\-&]+$/.test(req.body.name)) {
+            if(nameRegex.test(req.body.name)) {
                 req.user.lists[index].items.push({
                     name: req.body.name,
                     price: req.body.price ? parseFloat(req.body.price) : null
