@@ -83,7 +83,7 @@ app.post('/lists', passport.authenticate('jwt', {session: false}), (req, res) =>
                 if(err) {
                     res.status(500).json({message: 'Nie udało się utworzyć listy'});
                 } else {
-                    res.status(201).json(req.user.lists);
+                    res.status(201).json(req.user.lists[req.user.lists.length-1]);
                 }
             });
         } else {
@@ -99,6 +99,63 @@ app.delete('/lists/:id', passport.authenticate('jwt', {session: false}), (req, r
     req.user.save(err => {
         err ? res.sendStatus(500) : res.sendStatus(200);
     });
+});
+
+app.get('/lists/:listId/items', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const list = req.user.lists.find(list => list._id.equals(req.params.listId));
+    if(list !== -1) {
+        res.json(list.items);
+    } else {
+        res.status(400).json({message: 'Nie istnieje lista o podanym id'});
+    }
+});
+
+app.post('/lists/:listId/items', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const index = req.user.lists.findIndex(list => list._id.equals(req.params.listId));
+    if(index !== -1) {
+        if(req.body.name) {
+            if(/^[a-zA-Z0-9 \.!?,:;\-&]+$/.test(req.body.name)) {
+                req.user.lists[index].items.push({
+                    name: req.body.name,
+                    price: req.body.price ? parseFloat(req.body.price) : null
+                });
+                req.user.save(err => {
+                    if(err) {
+                        res.status(500).json({message: 'Nie można dodać produktu'});
+                    } else {
+                        res.status(201).json(req.user.lists[index].items[req.user.lists[index].items.length-1]);
+                    }
+                });
+            } else {
+                res.status(400).json({message: 'Nazwa zawiera niedozwolone znaki'});
+            }
+        } else {
+            res.status(400).json({message: 'Nie podano nazwy produktu'});
+        }
+    } else {
+        res.status(400).json({message: 'Nie istnieje lista o podanym id'});
+    }
+});
+
+app.delete('/lists/:listId/items/:itemId', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const listIndex = req.user.lists.findIndex(list => list._id.equals(req.params.listId));
+    if(listIndex !== -1) {
+        const ItemIndex = req.user.lists[listIndex].items.findIndex(item => item._id.equals(req.params.itemId));
+        if(ItemIndex !== -1) {
+            req.user.lists[listIndex].items.splice(ItemIndex, 1);
+            req.user.save(err => {
+                if(err) {
+                    res.status(500).json({message: 'Nie można usunąć produktu'});
+                } else {
+                    res.sendStatus(200);
+                }
+            });
+        } else {
+            res.status(400).json({message: 'Nie istnieje produkt o podanym id'});
+        }
+    } else {
+        res.status(400).json({message: 'Nie istnieje lista o podanym id'});
+    }
 });
 
 const port = process.env.PORT || 3000;
