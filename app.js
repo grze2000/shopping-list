@@ -106,7 +106,7 @@ app.delete('/lists/:id', passport.authenticate('jwt', {session: false}), (req, r
 app.get('/lists/:listId/items', passport.authenticate('jwt', {session: false}), (req, res) => {
     const list = req.user.lists.find(list => list._id.equals(req.params.listId));
     if(list !== -1) {
-        res.json(list.items);
+        res.json(list);
     } else {
         res.status(400).json({message: 'Nie istnieje lista o podanym id'});
     }
