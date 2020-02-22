@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="list-title">{{ title }}</h4>
+        <h4 class="list-title">{{ title }}<i class="icon-plus"></i></h4>
         <ul class="list">
             <li v-for="item in items" :key="item.id" @click="onClick(item.id)" :class="selected===item.id ? 'active' : ''">{{ item.name }}<span>{{ item.size }}</span></li>
         </ul>
@@ -44,6 +44,10 @@ export default {
     .list-title {
         margin: 25px 0 10px 0;
         padding: 0 10px;
+        display: flex;
+    }
+    .list-title > i {
+        margin-left: auto;
     }
     .active {
         color: var(--main-font-color);

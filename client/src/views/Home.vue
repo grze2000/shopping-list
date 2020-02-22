@@ -1,9 +1,10 @@
 <template>
     <main class="flex-container">
         <Sidebar>
-            <h2 class="app-name">{{ appName }}</h2><button @click="logout()">Wyloguj się</button>
+            <h2 class="app-name">{{ appName }}</h2>
             <List :items="categories" title="Kategorie"></List>
             <List :items="lists" :selected="selected" @selectList="selectList" title="Listy"></List>
+            <section class="sidebar-bottom"><i class="icon-logout" title="Wyloguj się" @click="logout()"></i></section>
         </Sidebar>
         <Content>
             <ProductList :title="activeList.name" :products="activeList.items"></ProductList>
@@ -82,5 +83,8 @@ export default {
     .app-name {
         text-align: center;
         color: var(--main-font-color);
+    }
+    i {
+        cursor: pointer;
     }
 </style>

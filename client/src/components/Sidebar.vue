@@ -18,5 +18,12 @@ export default {
         color: #eee;
         background-color: var(--main-bg-color);
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar-bottom {
+        margin-top: auto;
+        padding: 10px;
+        text-align: right;
     }
 </style>
