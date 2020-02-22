@@ -139,11 +139,38 @@ app.post('/lists/:listId/items', passport.authenticate('jwt', {session: false}),
     }
 });
 
+app.patch('/lists/:listId/items/:itemId', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const listIndex = req.user.lists.findIndex(list => list._id.equals(req.params.listId));
+    if(listIndex !== -1) {
+        const itemIndex = req.user.lists[listIndex].items.findIndex(item => item._id.equals(req.params.itemId));
+        if(itemIndex !== -1) {
+            if(Object.keys(req.body).length) {
+                for(let key in req.body) {
+                    req.user.lists[listIndex].items[itemIndex][key] = req.body[key];
+                }
+                req.user.save(err => {
+                    if(err) {
+                        res.status(500).json({message: 'Nie można zaktualizować produktu'});
+                    } else {
+                        res.status(200).json(req.user.lists[listIndex].items[itemIndex]);
+                    }
+                });
+            } else {
+                res.sendStatus(400);
+            }
+        } else {
+            res.status(400).json({message: 'Nie istnieje produkt o podanym id'});
+        }
+    } else {
+        res.status(400).json({message: 'Nie istnieje lista o podanym id'});
+    }
+});
+
 app.delete('/lists/:listId/items/:itemId', passport.authenticate('jwt', {session: false}), (req, res) => {
     const listIndex = req.user.lists.findIndex(list => list._id.equals(req.params.listId));
     if(listIndex !== -1) {
-        const ItemIndex = req.user.lists[listIndex].items.findIndex(item => item._id.equals(req.params.itemId));
-        if(ItemIndex !== -1) {
+        const itemIndex = req.user.lists[listIndex].items.findIndex(item => item._id.equals(req.params.itemId));
+        if(itemIndex !== -1) {
             req.user.lists[listIndex].items.splice(ItemIndex, 1);
             req.user.save(err => {
                 if(err) {
