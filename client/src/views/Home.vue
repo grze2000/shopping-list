@@ -30,9 +30,9 @@ export default {
     data() {
         return {
             categories: [
-                {id: 3, name: 'Owoce', size: 3},
-                {id: 4, name: 'Elektronika', size: 15},
-                {id: 5, name: 'Napoje', size: 6}
+                {id: 3, name: 'Owoce', itemCount: 3},
+                {id: 4, name: 'Elektronika', itemCount: 15},
+                {id: 5, name: 'Napoje', itemCount: 6}
             ],
             lists: [],
             activeList: {

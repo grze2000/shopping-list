@@ -72,7 +72,7 @@ app.get('/user', passport.authenticate('jwt', {session: false}), (req, res) => {
 });
 
 app.get('/lists', passport.authenticate('jwt', {session: false}), (req, res) => {
-    res.json(req.user.lists.map(x => ({id: x._id, name: x.name})));
+    res.json(req.user.lists.map(x => ({id: x._id, name: x.name, itemCount: x.items.length})));
 });
 
 app.post('/lists', passport.authenticate('jwt', {session: false}), (req, res) => {

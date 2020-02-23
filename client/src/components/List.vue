@@ -2,7 +2,7 @@
     <div>
         <h4 class="list-title">{{ title }}<i class="icon-plus"></i></h4>
         <ul class="list">
-            <li v-for="item in items" :key="item.id" @click="onClick(item.id)" :class="selected===item.id ? 'active' : ''">{{ item.name }}<span>{{ item.size }}</span></li>
+            <li v-for="item in items" :key="item.id" @click="onClick(item.id)" :class="selected===item.id ? 'active' : ''">{{ item.name }}<span>{{ item.itemCount }}</span></li>
         </ul>
     </div>
 </template>
@@ -26,7 +26,7 @@ export default {
         margin: 0;
     }
     .list > li {
-        padding: 4px 25px;
+        padding: 4px 10px 4px 25px;
         cursor: pointer;
         display: flex;
     }
