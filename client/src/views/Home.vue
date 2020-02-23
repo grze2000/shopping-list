@@ -7,7 +7,7 @@
             <section class="sidebar-bottom"><i class="icon-logout" title="Wyloguj się" @click="logout()"></i></section>
         </Sidebar>
         <Content>
-            <ProductList :title="activeList.name" :products="activeList.items"></ProductList>
+            <ProductList :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct"></ProductList>
         </Content>
     </main>
 </template>
@@ -65,8 +65,17 @@ export default {
                 this.activeList = response.data;
             })
             .catch(err => {
-                alert(err);
+                console.error(err);
             });
+        },
+        selectProduct(id, state) {
+            const item = this.activeList.items.find(x => x._id === id);
+            if(item != -1) {
+                axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, {bought: !item.bought})
+                .catch(err => {
+                    console.error(err);
+                });
+            }
         }
     }
 }
@@ -86,5 +95,8 @@ export default {
     }
     i {
         cursor: pointer;
+    }
+    i:hover {
+        color: var(--main-font-color);
     }
 </style>

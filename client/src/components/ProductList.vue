@@ -2,9 +2,9 @@
     <section class="product-list-container">
         <h3 class="product-list-title">{{ title }}</h3>
         <ul class="product-list">
-            <li v-for="product in products" :key="product.name">
+            <li v-for="product in products" :key="product.name" @click="onClick(product._id)">
                 <label :for="product.name">
-                    <input type="checkbox" :id="product.name">&emsp; {{ product.name}} {{ product.price }}
+                    <input type="checkbox" :id="product.name" :checked="product.bought">&emsp; {{ product.name}} {{ product.price }}
                 </label>
             </li>
         </ul>
@@ -14,7 +14,12 @@
 <script>
 export default {
     name: 'ProductList',
-    props: ['title', 'products']
+    props: ['title', 'products'],
+    methods: {
+        onClick(productId) {
+            this.$emit('selectProduct', productId);
+        }
+    }
 }
 </script>
 

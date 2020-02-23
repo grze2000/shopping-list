@@ -7,7 +7,12 @@ const itemSchema = new Schema({
        type: String,
        required: true
    },
-   price: Number
+   price: Number,
+   bought: {
+       type: Boolean,
+       default: false
+   }
+   
 },{_id: true});
 
 const listSchema = new Schema({
