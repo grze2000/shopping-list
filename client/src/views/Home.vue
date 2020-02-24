@@ -68,10 +68,10 @@ export default {
                 console.error(err);
             });
         },
-        selectProduct(id, state) {
+        selectProduct(id) {
             const item = this.activeList.items.find(x => x._id === id);
             if(item != -1) {
-                axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, {bought: !item.bought})
+                axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, {bought: item.bought})
                 .catch(err => {
                     console.error(err);
                 });

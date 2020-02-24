@@ -2,11 +2,10 @@
     <section class="product-list-container">
         <h3 class="product-list-title">{{ title }}<div class="product-title-icons"><i class="icon-plus" title="Dodaj produkt"></i></div></h3>
         <ul class="product-list">
-            <li v-for="product in products" :key="product.name" @click="onClick(product._id)">
-                <label :for="product.name">
-                    <input type="checkbox" :id="product.name" :checked="product.bought">&emsp; {{ product.name}} {{ product.price }}
-                    <div class="product-icons"><i class="icon-pencil"></i><i class="icon-cancel"></i></div>
-                </label>
+            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; markProduct(product._id)" :class="{checked: product.bought}">
+                <div class="checkbox"></div>
+                <div class="product-content">{{ product.name}}{{ product.price ? ` (${product.price} zł)` : '' }}</div>
+                <div class="product-icons"><i class="icon-pencil"></i><i class="icon-cancel" @click.stop="removeProduct()"></i></div>
             </li>
         </ul>
     </section>
@@ -17,8 +16,11 @@ export default {
     name: 'ProductList',
     props: ['title', 'products'],
     methods: {
-        onClick(productId) {
+        markProduct(productId) {
             this.$emit('selectProduct', productId);
+        },
+        removeProduct() {
+            alert('ok');
         }
     }
 }
@@ -41,14 +43,15 @@ export default {
         border-top: 2px solid #eee;
         cursor: default;
         user-select: none;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
     }
     .product-list > li:hover {
         background-color: #f2f6f2;
     }
-    .product-list > li > label {
-        padding: 10px 15px;
-        display: flex;
-        align-items: center;
+    .product-content {
+        padding: 0 8px;
     }
     .product-list-title {
         margin: 0;
@@ -78,5 +81,18 @@ export default {
     }
     .product-icons > i.icon-cancel:hover {
         color: #ff5d5d;
+    }
+    .checkbox {
+        border-radius: 50%;
+        border: 2px solid var(--main-bg-hover-color);
+        width: 18px;
+        height: 18px;
+    }
+    .product-list > li.checked > .checkbox {
+        background-color: var(--main-bg-color);
+        border-color: var(--main-bg-color);
+    }
+    .product-list > li.checked {
+        background-color: #e5f0ea;
     }
 </style>
