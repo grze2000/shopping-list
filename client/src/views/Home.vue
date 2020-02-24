@@ -7,7 +7,7 @@
             <section class="sidebar-bottom"><i class="icon-logout" title="Wyloguj się" @click="logout()"></i></section>
         </Sidebar>
         <Content>
-            <ProductList :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct"></ProductList>
+            <ProductList :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"></ProductList>
         </Content>
     </main>
 </template>
@@ -72,6 +72,18 @@ export default {
             const item = this.activeList.items.find(x => x._id === id);
             if(item != -1) {
                 axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, {bought: item.bought})
+                .catch(err => {
+                    console.error(err);
+                });
+            }
+        },
+        removeProduct(id) {
+            const index = this.activeList.items.findIndex(x => x._id === id);
+            if(index != -1) {
+                axios.delete(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`)
+                .then(response => {
+                    this.activeList.items.splice(index, 1);
+                })
                 .catch(err => {
                     console.error(err);
                 });

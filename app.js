@@ -172,7 +172,7 @@ app.delete('/lists/:listId/items/:itemId', passport.authenticate('jwt', {session
     if(listIndex !== -1) {
         const itemIndex = req.user.lists[listIndex].items.findIndex(item => item._id.equals(req.params.itemId));
         if(itemIndex !== -1) {
-            req.user.lists[listIndex].items.splice(ItemIndex, 1);
+            req.user.lists[listIndex].items.splice(itemIndex, 1);
             req.user.save(err => {
                 if(err) {
                     res.status(500).json({message: 'Nie można usunąć produktu'});

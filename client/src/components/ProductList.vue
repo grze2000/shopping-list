@@ -5,7 +5,7 @@
             <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; markProduct(product._id)" :class="{checked: product.bought}">
                 <div class="checkbox"></div>
                 <div class="product-content">{{ product.name}}{{ product.price ? ` (${product.price} zł)` : '' }}</div>
-                <div class="product-icons"><i class="icon-pencil"></i><i class="icon-cancel" @click.stop="removeProduct()"></i></div>
+                <div class="product-icons"><i class="icon-pencil"></i><i class="icon-cancel" @click.stop="removeProduct(product._id)"></i></div>
             </li>
         </ul>
     </section>
@@ -19,8 +19,8 @@ export default {
         markProduct(productId) {
             this.$emit('selectProduct', productId);
         },
-        removeProduct() {
-            alert('ok');
+        removeProduct(productId) {
+            this.$emit('removeProduct', productId);
         }
     }
 }
