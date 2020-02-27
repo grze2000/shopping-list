@@ -2,19 +2,31 @@
     <section class="product-list-container">
         <h3 class="product-list-title">{{ title }}<div class="product-title-icons"><i class="icon-plus" title="Dodaj produkt"></i></div></h3>
         <ul class="product-list">
-            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}">
+            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product._id)">
                 <div class="checkbox"></div>
                 <div class="product-content">{{ product.name}}{{ product.price ? ` (${product.price} zł)` : '' }}</div>
                 <div class="product-icons"><i class="icon-pencil"></i><i class="icon-cancel" @click.stop="$emit('removeProduct', product._id)"></i></div>
             </li>
         </ul>
+        <vue-context ref="productContextMenu">
+            <template slot-scope="productId">
+                <li>
+                    <a href="#" @click.prevent="$emit('removeProduct', productId.data)">Usuń</a>
+                </li>
+            </template>
+        </vue-context>
     </section>
 </template>
 
 <script>
+import VueContext from 'vue-context'
+
 export default {
     name: 'ProductList',
-    props: ['title', 'products']
+    props: ['title', 'products'],
+    components: {
+        VueContext
+    }
 }
 </script>
 
