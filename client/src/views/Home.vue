@@ -29,6 +29,7 @@ export default {
     },
     data() {
         return {
+            appName: process.env.VUE_APP_NAME,
             categories: [
                 {id: 3, name: 'Owoce', itemCount: 3},
                 {id: 4, name: 'Elektronika', itemCount: 15},
@@ -39,7 +40,6 @@ export default {
                 name: 'Nie wybrano listy',
                 items: []
             },
-            appName: 'ShoppingList',
             selected: 0
         }
     },

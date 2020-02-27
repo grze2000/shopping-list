@@ -26,4 +26,42 @@
         font-family: 'Montserrat', sans-serif;
         background-color: #eee;
     }
+    .form input[type=text], input[type=password], input[type=email] {
+        border-radius: 3px;
+        padding: 10px;
+        border: 1px solid #bbb;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .form input[type=submit] {
+        border-radius: 3px;
+        background-color: var(--main-bg-color);
+        color: #fff;
+        padding: 10px;
+        border: 0;
+        width: 100%;
+    }
+    .form input[type=submit]:hover {
+        background-color: var(--main-bg-hover-color);
+        cursor: pointer;
+    }
+    .form-group {
+        padding: 10px;
+    }
+    .form {
+        width: 30%;
+        margin: 0 auto;
+        min-width: 300px;
+        text-align: center;
+    }
+    .error {
+        background-color: #ff9d9dcc;
+        padding: 7px 0;
+        margin: 0 10px;
+        border-radius: 1px;
+        color: #9c2424cc;
+    }
+    .msg {
+        font-size: 0.9em;
+    }
 </style>

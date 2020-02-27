@@ -1,6 +1,7 @@
 <template>
     <div>
-        <form @submit.prevent="onSubmit">
+        <h1 class="app-name">{{ appName }}</h1>
+        <form @submit.prevent="onSubmit" class="form">
             <div class="form-group">
                 <input type="email" placeholder="Email" v-model.trim="login.email"/>
             </div>
@@ -10,10 +11,12 @@
             <div class="form-group">
                 <input type="submit" value="Zaloguj się">
             </div>
-            <div class="form-gorup" v-if="error !== ''">
+            <div class="form-gorup msg error" v-if="error !== ''">
                 {{ error.data.message }}
             </div>
-            Nie masz konta? <a href="#" @click.prevent="register()">Zarejestruj się</a>
+            <div class="form-group msg">
+                Nie masz konta? <a href="#" @click.prevent="register()">Zarejestruj się</a>
+            </div>
         </form>
     </div>
 </template>
@@ -25,6 +28,7 @@ export default {
     name: 'Login',
     data() {
         return {
+            appName: process.env.VUE_APP_NAME,
             login: {},
             error: ""
         }
@@ -48,6 +52,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>
