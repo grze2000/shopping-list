@@ -4,7 +4,7 @@
             <h2 class="app-name">{{ appName }}</h2>
             <List :items="categories" title="Kategorie"></List>
             <List :items="lists" :selected="selected" @selectList="selectList" @addList="addList" @removeList="removeList" title="Listy"></List>
-            <section class="sidebar-bottom"><i class="icon-logout" title="Wyloguj się" @click="logout()"></i></section>
+            <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
         <Content>
             <ProductList :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"></ProductList>
@@ -57,6 +57,18 @@ export default {
         logout() {
             localStorage.removeItem('jwtToken');
             this.$router.push('/login');
+        },
+        async refresh() {
+            try {
+                const lists = await axios.get(`${process.env.VUE_APP_API_URL}/lists`);
+                this.lists = lists.data;
+                if(this.selected) {
+                    const products = await axios.get(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items`);
+                    this.activeList = products.data;
+                }
+            } catch(err) {
+                console.error(err);
+            }
         },
         selectList(id) {
             this.selected = id;
