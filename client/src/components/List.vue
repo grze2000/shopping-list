@@ -2,16 +2,28 @@
     <div>
         <h4 class="list-title">{{ title }}<i class="icon-plus" @click="showInput()"></i></h4>
         <ul class="list">
-            <li class="product-add" v-if="add"><input type="text" ref="input" v-model="newListName" @keyup.enter="addList()" @keyup.esc="add = false; newListName = ''"/><i class="icon-ok" @click="addList()"></i><i class="icon-cancel" @click="add = false; newListName = ''"></i></li>
-            <li v-for="item in items" :key="item.id" @click="onClick(item.id)" :class="selected===item.id ? 'active' : ''">{{ item.name }}<span>{{ item.itemCount }}</span></li>
+            <li class="product-add" v-if="add"><input type="text" ref="input" maxlength="50" v-model="newListName" @keyup.enter="addList()" @keyup.esc="add = false; newListName = ''"/><i class="icon-ok" @click="addList()"></i><i class="icon-cancel" @click="add = false; newListName = ''"></i></li>
+            <li v-for="item in items" :key="item.id" @click="$emit('selectList', item.id);" :class="selected===item.id ? 'active' : ''" @contextmenu.prevent="$refs.listContextMenu.open($event, item.id)">{{ item.name }}<span>{{ item.itemCount }}</span></li>
         </ul>
+        <vue-context ref="listContextMenu">
+            <template slot-scope="listId">
+                <li>
+                    <a href="#" @click.prevent="$emit('removeList', listId.data)">Usuń</a>
+                </li>
+            </template>
+        </vue-context>
     </div>
 </template>
 
 <script>
+import VueContext from 'vue-context'
+
 export default {
     name: 'list',
     props: ['title', 'items', 'selected'],
+    components: {
+        VueContext
+    },
     data() {
         return {
             add: false,
@@ -19,9 +31,6 @@ export default {
         }
     },
     methods: {
-        onClick(itemId) {
-            this.$emit('selectList', itemId);
-        },
         addList() {
             this.newListName = this.newListName.trim();
             if(this.newListName === '') {
@@ -73,6 +82,14 @@ export default {
     }
     .list-title > i, .product-add > i {
         margin-left: auto;
+    }
+    .product-add > input {
+        min-width: 0;
+        border-radius: 2px;
+        border: 0;
+        margin-right: 2px;
+        padding: 0 5px;
+        box-sizing: border-box;
     }
     .active {
         color: var(--main-font-color);

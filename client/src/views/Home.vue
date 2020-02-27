@@ -1,9 +1,9 @@
 <template>
-    <main class="flex-container">
+    <main class="flex-container"  @contextmenu.prevent="">
         <Sidebar>
             <h2 class="app-name">{{ appName }}</h2>
             <List :items="categories" title="Kategorie"></List>
-            <List :items="lists" :selected="selected" @selectList="selectList" @addList="addList" title="Listy"></List>
+            <List :items="lists" :selected="selected" @selectList="selectList" @addList="addList" @removeList="removeList" title="Listy"></List>
             <section class="sidebar-bottom"><i class="icon-logout" title="Wyloguj się" @click="logout()"></i></section>
         </Sidebar>
         <Content>
@@ -72,6 +72,18 @@ export default {
             axios.post(`${process.env.VUE_APP_API_URL}/lists`, {name: listName})
             .then(response => {
                 this.lists.push(response.data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        },
+        removeList(id) {
+            axios.delete(`${process.env.VUE_APP_API_URL}/lists/${id}`)
+            .then(response => {
+                const index = this.lists.findIndex(x => x.id === id);
+                if(index != -1) {
+                    this.lists.splice(index, 1);
+                }
             })
             .catch(err => {
                 console.error(err);

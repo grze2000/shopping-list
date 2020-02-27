@@ -4,7 +4,17 @@
   </div>
 </template>
 
-<style> 
+<style>
+    @import  '~vue-context/dist/css/vue-context.css';
+
+    .v-context {
+        padding: 0;
+        font-size: 0.8em;
+        font-weight: normal;
+    }
+    .v-context > li > a {
+        padding: .5rem 1rem;
+    }
     :root {
         --main-bg-color: #33915d;
         --main-bg-hover-color: #5ea07b;
