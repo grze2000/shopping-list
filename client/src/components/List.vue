@@ -1,7 +1,8 @@
 <template>
     <div>
-        <h4 class="list-title">{{ title }}<i class="icon-plus"></i></h4>
+        <h4 class="list-title">{{ title }}<i class="icon-plus" @click="showInput()"></i></h4>
         <ul class="list">
+            <li class="product-add" v-if="add"><input type="text" ref="input" v-model="newListName" @keyup.enter="addList()" @keyup.esc="add = false; newListName = ''"/><i class="icon-ok" @click="addList()"></i><i class="icon-cancel" @click="add = false; newListName = ''"></i></li>
             <li v-for="item in items" :key="item.id" @click="onClick(item.id)" :class="selected===item.id ? 'active' : ''">{{ item.name }}<span>{{ item.itemCount }}</span></li>
         </ul>
     </div>
@@ -11,9 +12,33 @@
 export default {
     name: 'list',
     props: ['title', 'items', 'selected'],
+    data() {
+        return {
+            add: false,
+            newListName: ''
+        }
+    },
     methods: {
         onClick(itemId) {
             this.$emit('selectList', itemId);
+        },
+        addList() {
+            this.newListName = this.newListName.trim();
+            if(this.newListName === '') {
+                alert('Podaj nazwę listy');
+            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]{1,50}$/.test(this.newListName)) {
+                alert('Nazwa listy zawiera niedozwolone znaki');
+            } else {
+                this.$emit('addList', this.newListName);
+                this.add = false;
+                this.newListName = ''
+            }
+        },
+        showInput() {
+            this.add = !this.add;
+            if(this.add) {
+                this.$nextTick(() => this.$refs.input.focus());
+            }
         }
     }
 }
@@ -46,7 +71,7 @@ export default {
         padding: 0 10px;
         display: flex;
     }
-    .list-title > i {
+    .list-title > i, .product-add > i {
         margin-left: auto;
     }
     .active {

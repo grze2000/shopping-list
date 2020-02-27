@@ -86,7 +86,7 @@ app.post('/lists', passport.authenticate('jwt', {session: false}), (req, res) =>
                 if(err) {
                     res.status(500).json({message: 'Nie udało się utworzyć listy'});
                 } else {
-                    res.status(201).json(req.user.lists[req.user.lists.length-1]);
+                    res.status(201).json([req.user.lists[req.user.lists.length-1]].map(x => ({id: x._id, name: x.name, itemCount: x.items.length}))[0]);
                 }
             });
         } else {

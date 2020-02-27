@@ -2,10 +2,10 @@
     <section class="product-list-container">
         <h3 class="product-list-title">{{ title }}<div class="product-title-icons"><i class="icon-plus" title="Dodaj produkt"></i></div></h3>
         <ul class="product-list">
-            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; markProduct(product._id)" :class="{checked: product.bought}">
+            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}">
                 <div class="checkbox"></div>
                 <div class="product-content">{{ product.name}}{{ product.price ? ` (${product.price} zł)` : '' }}</div>
-                <div class="product-icons"><i class="icon-pencil"></i><i class="icon-cancel" @click.stop="removeProduct(product._id)"></i></div>
+                <div class="product-icons"><i class="icon-pencil"></i><i class="icon-cancel" @click.stop="$emit('removeProduct', product._id)"></i></div>
             </li>
         </ul>
     </section>
@@ -14,15 +14,7 @@
 <script>
 export default {
     name: 'ProductList',
-    props: ['title', 'products'],
-    methods: {
-        markProduct(productId) {
-            this.$emit('selectProduct', productId);
-        },
-        removeProduct(productId) {
-            this.$emit('removeProduct', productId);
-        }
-    }
+    props: ['title', 'products']
 }
 </script>
 

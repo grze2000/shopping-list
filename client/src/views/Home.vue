@@ -3,7 +3,7 @@
         <Sidebar>
             <h2 class="app-name">{{ appName }}</h2>
             <List :items="categories" title="Kategorie"></List>
-            <List :items="lists" :selected="selected" @selectList="selectList" title="Listy"></List>
+            <List :items="lists" :selected="selected" @selectList="selectList" @addList="addList" title="Listy"></List>
             <section class="sidebar-bottom"><i class="icon-logout" title="Wyloguj się" @click="logout()"></i></section>
         </Sidebar>
         <Content>
@@ -68,9 +68,18 @@ export default {
                 console.error(err);
             });
         },
+        addList(listName) {
+            axios.post(`${process.env.VUE_APP_API_URL}/lists`, {name: listName})
+            .then(response => {
+                this.lists.push(response.data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        },
         selectProduct(id) {
             const item = this.activeList.items.find(x => x._id === id);
-            if(item != -1) {
+            if(typeof item !== 'undefined') {
                 axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, {bought: item.bought})
                 .catch(err => {
                     console.error(err);
