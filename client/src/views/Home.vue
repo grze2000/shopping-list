@@ -81,7 +81,7 @@ export default {
             axios.delete(`${process.env.VUE_APP_API_URL}/lists/${id}`)
             .then(response => {
                 const index = this.lists.findIndex(x => x.id === id);
-                if(index != -1) {
+                if(index !== -1) {
                     this.lists.splice(index, 1);
                 }
             })
@@ -100,10 +100,14 @@ export default {
         },
         removeProduct(id) {
             const index = this.activeList.items.findIndex(x => x._id === id);
-            if(index != -1) {
+            if(index !== -1) {
                 axios.delete(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`)
                 .then(response => {
                     this.activeList.items.splice(index, 1);
+                    const listIndex = this.lists.findIndex(x => x.id === this.selected);
+                    if(listIndex !== -1) {
+                        this.lists[listIndex].itemCount--;
+                    }
                 })
                 .catch(err => {
                     console.error(err);
