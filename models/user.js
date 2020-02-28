@@ -23,6 +23,13 @@ const listSchema = new Schema({
     items: [itemSchema]
 });
 
+const categorySchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    }
+});
+
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -32,7 +39,8 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    lists: [listSchema]
+    lists: [listSchema],
+    categories: [categorySchema]
 });
 
 UserSchema.pre('save', function(next) {

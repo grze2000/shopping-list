@@ -72,7 +72,7 @@ app.get('/user', passport.authenticate('jwt', {session: false}), (req, res) => {
 });
 
 app.get('/lists', passport.authenticate('jwt', {session: false}), (req, res) => {
-    res.json(req.user.lists.map(x => ({id: x._id, name: x.name, itemCount: x.items.length})));
+    res.json(req.user.lists.map(x => ({_id: x._id, name: x.name, itemCount: x.items.length})));
 });
 
 app.post('/lists', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -185,6 +185,31 @@ app.delete('/lists/:listId/items/:itemId', passport.authenticate('jwt', {session
         }
     } else {
         res.status(400).json({message: 'Nie istnieje lista o podanym id'});
+    }
+});
+
+app.get('/categories', passport.authenticate('jwt', {session: false}), (req, res) => {
+    res.json(req.user.categories.map(x => ({_id: x._id, name: x.name, itemCount: 0})));
+});
+
+app.post('/categories', passport.authenticate('jwt', {session: false}), (req, res) => {
+    if(req.body.name) {
+        if(nameRegex.test(req.body.name)) {
+            req.user.categories.push({
+                name: req.body.name
+            });
+            req.user.save(err => {
+                if(err) {
+                    res.status(500).json({message: 'Nie udało się utworzyć kategorii'});
+                } else {
+                    res.status(201).json(req.user.categories);
+                }
+            });
+        } else {
+            res.status(400).json({message: 'Nazwa zawiera niedozwolone znaki'});
+        }
+    } else {
+        res.status(400).json({message: 'Nie podano nazwy kategorii'});
     }
 });
 

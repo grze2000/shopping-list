@@ -33,7 +33,7 @@
             </div>
             <div class="grid-item-submit">
                 <input v-if="product === 'add'" type="submit" value="Dodaj">
-                <input v-else type="submit" value="Zapisz">
+                <input v-else type="submit" value="Zapisz" @click="$emit('editProduct', product._id)">
             </div>
         </form>
     </section>

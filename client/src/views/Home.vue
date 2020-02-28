@@ -7,7 +7,7 @@
             <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
         <Content>
-            <ProductView v-if="activeProduct" :product="activeProduct"></ProductView>
+            <ProductView v-if="activeProduct" :product="activeProduct" @editProduct="editProduct"></ProductView>
             <ProductList v-else :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"
             @modifyProduct="modifyProduct" @addProduct="addProduct"></ProductList>
         </Content>
@@ -34,11 +34,7 @@ export default {
     data() {
         return {
             appName: process.env.VUE_APP_NAME,
-            categories: [
-                {id: 3, name: 'Owoce', itemCount: 3},
-                {id: 4, name: 'Elektronika', itemCount: 15},
-                {id: 5, name: 'Napoje', itemCount: 6}
-            ],
+            categories: [],
             lists: [],
             activeList: {
                 name: undefined,
@@ -48,15 +44,16 @@ export default {
             selected: 0,
         }
     },
-    created() {
-        axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
-        axios.get(`${process.env.VUE_APP_API_URL}/lists`)
-        .then(response => {
-            this.lists = response.data;
-        })
-        .catch(err => {
+    async created() {
+        try {
+            axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
+            const lists = await axios.get(`${process.env.VUE_APP_API_URL}/lists`);
+            const categories = await axios.get(`${process.env.VUE_APP_API_URL}/categories`);
+            this.lists = lists.data;
+            this.categories = categories.data;
+        } catch(err) {
             this.$router.push('/login');
-        });
+        }
     },
     methods: {
         logout() {
@@ -140,6 +137,9 @@ export default {
         },
         addProduct() {
             this.activeProduct = 'add'
+        },
+        editProduct(id) {
+            alert(id);
         }
     }
 }
