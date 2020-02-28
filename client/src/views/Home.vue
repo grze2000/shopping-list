@@ -2,7 +2,7 @@
     <main class="flex-container"  @contextmenu.prevent="">
         <Sidebar>
             <h2 class="app-name">{{ appName }}</h2>
-            <List :items="categories" :selected="selected" @selectItem="selectCategory" title="Kategorie"></List>
+            <List :items="categories" :selected="selected" @selectItem="selectCategory" @addItem="addCategory" title="Kategorie"></List>
             <List :items="lists" :selected="selected" @selectItem="selectList" @addItem="addList" @removeItem="removeList" title="Listy"></List>
             <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
@@ -149,6 +149,15 @@ export default {
             axios.get(`${process.env.VUE_APP_API_URL}/categories/${id}/items`)
             .then(response => {
                 this.activeList = response.data;
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        },
+        addCategory(categoryName) {
+            axios.post(`${process.env.VUE_APP_API_URL}/categories`, {name: categoryName})
+            .then(response => {
+                this.categories.push(response.data);
             })
             .catch(err => {
                 console.error(err);

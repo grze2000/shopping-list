@@ -213,7 +213,7 @@ app.post('/categories', passport.authenticate('jwt', {session: false}), (req, re
                 if(err) {
                     res.status(500).json({message: 'Nie udało się utworzyć kategorii'});
                 } else {
-                    res.status(201).json(req.user.categories);
+                    res.status(201).json([req.user.categories[req.user.categories.length-1]].map(x => ({_id: x._id, name: x.name, itemCount: 0}))[0]);
                 }
             });
         } else {
