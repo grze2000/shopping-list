@@ -7,7 +7,9 @@
             <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
         <Content>
-            <ProductList :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"></ProductList>
+            <ProductView v-if="activeProduct" :product="activeProduct"></ProductView>
+            <ProductList v-else :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"
+            @modifyProduct="modifyProduct" @addProduct="addProduct"></ProductList>
         </Content>
     </main>
 </template>
@@ -18,6 +20,7 @@ import Sidebar from  '../components/Sidebar.vue'
 import Content from '../components/Content.vue'
 import List from '../components/List.vue'
 import ProductList from '../components/ProductList.vue'
+import ProductView from '../components/ProductView.vue'
 
 export default {
     name: 'Home',
@@ -25,7 +28,8 @@ export default {
         Sidebar,
         Content,
         List,
-        ProductList
+        ProductList,
+        ProductView
     },
     data() {
         return {
@@ -37,10 +41,11 @@ export default {
             ],
             lists: [],
             activeList: {
-                name: 'Nie wybrano listy',
+                name: undefined,
                 items: []
             },
-            selected: 0
+            activeProduct: undefined,
+            selected: 0,
         }
     },
     created() {
@@ -71,6 +76,7 @@ export default {
             }
         },
         selectList(id) {
+            this.activeProduct = undefined;
             this.selected = id;
             axios.get(`${process.env.VUE_APP_API_URL}/lists/${id}/items`)
             .then(response => {
@@ -125,6 +131,15 @@ export default {
                     console.error(err);
                 });
             }
+        },
+        modifyProduct(id) {
+            const product = this.activeList.items.find(x => x._id === id);
+            if(typeof product !== 'undefined') {
+                this.activeProduct = product;
+            }
+        },
+        addProduct() {
+            this.activeProduct = 'add'
         }
     }
 }

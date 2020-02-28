@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="app-name">{{ appName }}</h1>
-        <form @submit.prevent="onSubmit" class="form">
+        <form @submit.prevent="onSubmit" class="form form30 text-center">
             <div class="form-group">
                 <input type="email" placeholder="Email" v-model.trim="login.email"/>
             </div>

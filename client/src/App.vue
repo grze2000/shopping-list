@@ -26,12 +26,23 @@
         font-family: 'Montserrat', sans-serif;
         background-color: #eee;
     }
-    .form input[type=text], input[type=password], input[type=email] {
+    .form input[type=text],
+    .form input[type=password],
+    .form input[type=email],
+    .form input[type=number],
+    .form select,
+    .form textarea {
         border-radius: 3px;
         padding: 10px;
         border: 1px solid #bbb;
         width: 100%;
         box-sizing: border-box;
+    }
+    .form input:focus, .form select:focus, .form textarea:focus {
+        outline-color: var(--main-bg-hover-color);
+    }
+    textarea {
+        resize: none;
     }
     .form input[type=submit] {
         border-radius: 3px;
@@ -48,11 +59,10 @@
     .form-group {
         padding: 10px;
     }
-    .form {
+    .form.form30 {
         width: 30%;
         margin: 0 auto;
         min-width: 300px;
-        text-align: center;
     }
     .error {
         background-color: #ff9d9dcc;
@@ -63,5 +73,8 @@
     }
     .msg {
         font-size: 0.9em;
+    }
+    .text-center {
+        text-align: center;
     }
 </style>
