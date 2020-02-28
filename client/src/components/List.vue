@@ -3,18 +3,18 @@
         <h4 class="list-title">{{ title }}<i class="icon-plus" @click="showInput()"></i></h4>
         <ul class="list">
             <li class="product-add" v-if="add">
-                <input type="text" ref="input" maxlength="50" v-model="newListName" @keyup.enter="addList()" @keyup.esc="add = false; newListName = ''"/>
-                <i class="icon-ok" @click="addList()"></i>
-                <i class="icon-cancel" @click="add = false; newListName = ''"></i>
+                <input type="text" ref="input" maxlength="50" v-model="newItemName" @keyup.enter="addItem()" @keyup.esc="add = false; newItemName = ''"/>
+                <i class="icon-ok" @click="addItem()"></i>
+                <i class="icon-cancel" @click="add = false; newItemName = ''"></i>
             </li>
-            <li v-for="item in items" :key="item._id" @click="$emit('selectList', item._id);" :class="selected===item._id ? 'active' : ''" @contextmenu.prevent="$refs.listContextMenu.open($event, item._id)">
+            <li v-for="item in items" :key="item._id" @click="$emit('selectItem', item._id);" :class="selected===item._id ? 'active' : ''" @contextmenu.prevent="$refs.listContextMenu.open($event, item._id)">
                 {{ item.name }}<span>{{ item.itemCount }}</span>
             </li>
         </ul>
         <vue-context ref="listContextMenu">
             <template slot-scope="listId">
                 <li>
-                    <a href="#" @click.prevent="$emit('removeList', listId.data)">Usuń</a>
+                    <a href="#" @click.prevent="$emit('removeItem', listId.data)">Usuń</a>
                 </li>
             </template>
         </vue-context>
@@ -33,20 +33,20 @@ export default {
     data() {
         return {
             add: false,
-            newListName: ''
+            newItemName: ''
         }
     },
     methods: {
-        addList() {
-            this.newListName = this.newListName.trim();
-            if(this.newListName === '') {
+        addItem() {
+            this.newItemName = this.newItemName.trim();
+            if(this.newItemName === '') {
                 alert('Podaj nazwę listy');
-            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]{1,50}$/.test(this.newListName)) {
+            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]{1,50}$/.test(this.newItemName)) {
                 alert('Nazwa listy zawiera niedozwolone znaki');
             } else {
-                this.$emit('addList', this.newListName);
+                this.$emit('addItem', this.newItemName);
                 this.add = false;
-                this.newListName = ''
+                this.newItemName = ''
             }
         },
         showInput() {

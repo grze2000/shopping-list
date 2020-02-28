@@ -2,8 +2,8 @@
     <main class="flex-container"  @contextmenu.prevent="">
         <Sidebar>
             <h2 class="app-name">{{ appName }}</h2>
-            <List :items="categories" title="Kategorie"></List>
-            <List :items="lists" :selected="selected" @selectList="selectList" @addList="addList" @removeList="removeList" title="Listy"></List>
+            <List :items="categories" :selected="selected" @selectItem="selectCategory" title="Kategorie"></List>
+            <List :items="lists" :selected="selected" @selectItem="selectList" @addItem="addList" @removeItem="removeList" title="Listy"></List>
             <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
         <Content>
@@ -63,7 +63,9 @@ export default {
         async refresh() {
             try {
                 const lists = await axios.get(`${process.env.VUE_APP_API_URL}/lists`);
+                const categories = await axios.get(`${process.env.VUE_APP_API_URL}/categories`);
                 this.lists = lists.data;
+                this.categories = categories.data;
                 if(this.selected) {
                     const products = await axios.get(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items`);
                     this.activeList = products.data;
@@ -140,7 +142,18 @@ export default {
         },
         editProduct(id) {
             alert(id);
-        }
+        },
+        selectCategory(id) {
+            this.activeProduct = undefined;
+            this.selected = id;
+            axios.get(`${process.env.VUE_APP_API_URL}/categories/${id}/items`)
+            .then(response => {
+                this.activeList = response.data;
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        },
     }
 }
 </script>

@@ -189,7 +189,18 @@ app.delete('/lists/:listId/items/:itemId', passport.authenticate('jwt', {session
 });
 
 app.get('/categories', passport.authenticate('jwt', {session: false}), (req, res) => {
-    res.json(req.user.categories.map(x => ({_id: x._id, name: x.name, itemCount: 0})));
+    var categories = req.user.categories.map(x => ({_id: x._id, name: x.name, itemCount: 0}));
+    for(list of req.user.lists) {
+        for(item of list.items) {
+            if(typeof item.category !== 'undefined') {
+                const index = categories.findIndex(x => x._id.equals(item.category))
+                if(index != -1) {
+                    categories[index].itemCount++;
+                }
+            }
+        }
+    }
+    res.json(categories);
 });
 
 app.post('/categories', passport.authenticate('jwt', {session: false}), (req, res) => {

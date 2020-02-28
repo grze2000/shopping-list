@@ -11,7 +11,8 @@ const itemSchema = new Schema({
    bought: {
        type: Boolean,
        default: false
-   }
+   },
+   category: Schema.Types.ObjectId
    
 },{_id: true});
 
