@@ -3,11 +3,11 @@
         <form class="form grid-container">
             <div class="grid-item-name">
                 <label for="name">Nazwa</label> 
-                <input type="text" id="name" :value="product.name">
+                <input type="text" id="name" v-model="product.name">
             </div>
             <div class="grid-item-price">
                 <label for="price">Cena</label>
-                <input type="number" id="price" min="0" step="0.01" :value="product.price ? product.price : 0">
+                <input type="number" id="price" min="0" step="0.01" v-model.number="product.price"/>
             </div>
             <div class="grid-item-priority">
                 <label for="priority">Priorytet</label>
@@ -32,8 +32,8 @@
                 <input type="text" id="aliexpress-link">
             </div>
             <div class="grid-item-submit">
-                <input v-if="product === 'add'" type="submit" value="Dodaj">
-                <input v-else type="submit" value="Zapisz" @click="$emit('editProduct', product._id)">
+                <input v-if="typeof product._id === 'undefined'" type="submit" value="Dodaj" @click.prevent="addProduct">
+                <input v-else type="submit" value="Zapisz" @click.prevent="$emit('editProduct', product._id)">
             </div>
         </form>
     </section>
@@ -42,7 +42,13 @@
 <script>
 export default {
     name: 'ProductView',
-    props: ['product']
+    props: ['product'],
+    methods: {
+        addProduct() {
+            // TO-DO Form Validation
+            this.$emit('addProduct');
+        }
+    }
 }
 </script>
 
