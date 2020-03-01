@@ -21,6 +21,7 @@
         <vue-context ref="productContextMenu">
             <template slot-scope="productId">
                 <li>
+                    <a href="#" @click.prevent="$emit('modifyProduct', productId.data)">Edytuj</a>
                     <a href="#" @click.prevent="$emit('removeProduct', productId.data)">Usuń</a>
                 </li>
             </template>

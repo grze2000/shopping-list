@@ -7,7 +7,7 @@
             <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
         <Content>
-            <ProductView v-if="activeProduct" :product="activeProduct" @editProduct="editProduct" @addProduct="saveProduct"></ProductView>
+            <ProductView v-if="activeProduct" :product="activeProduct" :categories="categories" @editProduct="editProduct" @addProduct="saveProduct"></ProductView>
             <ProductList v-else :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"
             @modifyProduct="modifyProduct" @addProduct="addProduct"></ProductList>
         </Content>
@@ -143,6 +143,7 @@ export default {
             const {_id, bought, ...data} = this.activeProduct;
             axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, data)
             .then(response => {
+                this.refresh();
                 this.activeProduct = undefined;
             })
             .catch(err => {

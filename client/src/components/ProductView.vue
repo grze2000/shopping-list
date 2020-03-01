@@ -19,16 +19,17 @@
             </div>
             <div class="grid-item-category">
                 <label for="category">Kategoria</label>
-                <select>
-                    <option>XD</option>
+                <select v-model="category" @change="product.category = category === '' ? null : category">
+                    <option value="">Bez kategorii</option>
+                    <option v-for="category in categories" :key="category._id" :value="category._id">{{ category.name }}</option>
                 </select>
             </div>
             <div class="grid-item-link1">
-                <label for="allegro-link">Link do Allegro</label> 
+                <label for="allegro-link">Link do sklepu</label> 
                 <input type="text" id="allegro-link">
             </div>
             <div class="grid-item-link2">
-                <label for="aliexpress-link">Link do Aliexpress</label> 
+                <label for="aliexpress-link">Link do sklepu</label> 
                 <input type="text" id="aliexpress-link">
             </div>
             <div class="grid-item-submit">
@@ -42,7 +43,12 @@
 <script>
 export default {
     name: 'ProductView',
-    props: ['product'],
+    props: ['product', 'categories'],
+    data() {
+        return {
+            category: this.product.category !== null ? this.product.category : ''
+        }
+    },
     methods: {
         addProduct() {
             // TO-DO Form Validation
