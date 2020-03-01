@@ -224,5 +224,27 @@ app.post('/categories', passport.authenticate('jwt', {session: false}), (req, re
     }
 });
 
+app.get('/categories/:categoryId/items', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const category = req.user.categories.find(x => x._id.equals(req.params.categoryId));
+    if(category !== -1) {
+        var data = {
+            name: category.name,
+            items: [],
+            itemCount: 0
+        }
+        for(list of req.user.lists) {
+            for(item of list.items) {
+                if(req.params.categoryId == item.category) {
+                    data.items.push(item);
+                }
+            }
+        }
+        data.itemCount = data.items.length;
+        res.json(data);
+    } else {
+        res.status(400).json({message: 'Nie istnieje kategoria o podanym id'});
+    }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on ${port}`));
