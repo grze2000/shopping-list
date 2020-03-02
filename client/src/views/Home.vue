@@ -136,7 +136,8 @@ export default {
         addProduct() {
             this.activeProduct = {
                 name: '',
-                price: 0
+                price: 0,
+                priority: 1
             }
         },
         editProduct(id) {

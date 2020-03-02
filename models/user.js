@@ -4,15 +4,20 @@ const bcrypt = require('bcrypt');
 
 const itemSchema = new Schema({
     name: {
-       type: String,
-       required: true
-   },
-   price: Number,
-   bought: {
-       type: Boolean,
-       default: false
-   },
-   category: Schema.Types.ObjectId
+        type: String,
+        required: true
+    },
+    price: Number,
+    bought: {
+        type: Boolean,
+        default: false
+    },
+    category: Schema.Types.ObjectId,
+    description: String,
+    priority: {
+       type: Number,
+       default: 1
+    }
    
 },{_id: true});
 

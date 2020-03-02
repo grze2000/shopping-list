@@ -3,7 +3,7 @@
         <form class="form grid-container">
             <div class="grid-item-name">
                 <label for="name">Nazwa</label> 
-                <input type="text" id="name" v-model="product.name">
+                <input type="text" id="name" v-model="product.name"/>
             </div>
             <div class="grid-item-price">
                 <label for="price">Cena</label>
@@ -11,11 +11,11 @@
             </div>
             <div class="grid-item-priority">
                 <label for="priority">Priorytet</label>
-                <input type="number" id="priority" min="0" value="1">
+                <input type="number" id="priority" min="0" v-model.number="product.priority"/>
             </div>
             <div class="grid-item-description">
                 <label for="description">Opis</label>
-                <textarea id="description"></textarea>
+                <textarea id="description" v-model="product.description"></textarea>
             </div>
             <div class="grid-item-category">
                 <label for="category">Kategoria</label>
@@ -46,7 +46,7 @@ export default {
     props: ['product', 'categories'],
     data() {
         return {
-            category: this.product.category !== null ? this.product.category : ''
+            category: typeof this.product.category !== 'undefined' ? this.product.category : ''
         }
     },
     methods: {
