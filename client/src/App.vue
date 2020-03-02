@@ -30,6 +30,7 @@
     .form input[type=password],
     .form input[type=email],
     .form input[type=number],
+    .form input[type=url],
     .form select,
     .form textarea {
         border-radius: 3px;

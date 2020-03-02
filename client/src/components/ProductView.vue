@@ -26,15 +26,16 @@
             </div>
             <div class="grid-item-link1">
                 <label for="allegro-link">Link do sklepu</label> 
-                <input type="text" id="allegro-link">
+                <input type="url" id="allegro-link" v-model="product.firstURL">
             </div>
             <div class="grid-item-link2">
                 <label for="aliexpress-link">Link do sklepu</label> 
-                <input type="text" id="aliexpress-link">
+                <input type="url" id="aliexpress-link" v-model="product.secondURL">
             </div>
             <div class="grid-item-submit">
+                <div class="grid-item-message">{{ message }}</div>
                 <input v-if="typeof product._id === 'undefined'" type="submit" value="Dodaj" @click.prevent="addProduct">
-                <input v-else type="submit" value="Zapisz" @click.prevent="$emit('editProduct', product._id)">
+                <input v-else type="submit" value="Zapisz" @click.prevent="editProduct">
             </div>
         </form>
     </section>
@@ -46,13 +47,39 @@ export default {
     props: ['product', 'categories'],
     data() {
         return {
-            category: typeof this.product.category !== 'undefined' ? this.product.category : ''
+            category: typeof this.product.category !== 'undefined' ? this.product.category : '',
+            message: ''
         }
     },
     methods: {
+        validateForm() {
+            if(!this.product.name.trim().length) {
+                this.message = 'Podaj nazwę produktu';
+            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]+$/.test(this.product.name)) {
+                this.message = 'Nazwa zawiera nieprawidłowe znaki';
+            } else if(isNaN(this.product.price)) {
+                this.message = 'Podaj prawidłową cenę';
+            } else if(!Number.isInteger(this.product.priority)) {
+                this.message = 'Podaj prawidłowy priorytet';
+            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]*$/.test(this.product.description)) {
+                this.message = 'Opis zawiera niedozwolone znaki';
+            } else if((this.product.firstURL.trim().length && !/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(this.product.firstURL))
+            || (this.product.secondURL.trim().length && !/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(this.product.secondURL))) {
+                this.message = 'Podaj prawidłowy link';
+            } else {
+                return true;
+            }
+            return false;
+        },
         addProduct() {
-            // TO-DO Form Validation
-            this.$emit('addProduct');
+            if(this.validateForm()) {
+                this.$emit('addProduct');
+            }
+        },
+        editProduct() {
+            if(this.validateForm()) {
+                this.$emit('editProduct', this.product._id);
+            }
         }
     }
 }
@@ -76,14 +103,14 @@ export default {
     }
     .grid-item-submit {
         grid-row: 5 / 6;
-        grid-column: 4 / 5;
+        grid-column: 1 / 5;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: flex-end;
         align-items: flex-end;
     }
     .grid-item-submit > input {
-        width: 50% !important;
+        width: auto !important;
         min-width: 100px;
         font-weight: bold;
     }
@@ -107,6 +134,9 @@ export default {
     .grid-item-link2 {
         grid-row: 4 / 5;
         grid-column: 3 / 5;
+    }
+    .grid-item-message {
+        padding: 10px;
     }
     label {
         color: var(--main-bg-color);

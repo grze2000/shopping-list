@@ -17,7 +17,9 @@ const itemSchema = new Schema({
     priority: {
        type: Number,
        default: 1
-    }
+    },
+    firstURL: String,
+    secondURL: String
    
 },{_id: true});
 
