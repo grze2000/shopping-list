@@ -18,6 +18,12 @@
                 </div>
             </li>
         </ul>
+        <h4 class="product-list-title" v-if="products.length">
+            {{ summary }}
+        </h4>
+        <h4 class="product-list-title" v-else>
+            Brak produktów
+        </h4>
         <vue-context ref="productContextMenu">
             <template slot-scope="product" v-if="product.data">
                 <li>
@@ -39,6 +45,26 @@ export default {
     props: ['title', 'products'],
     components: {
         VueContext
+    },
+    methods: {
+        text(number) {
+            let text = 'produktów';
+            if([1, 2, 3, 4].includes(number % 10)) {
+                text = 'produkty';
+            } else if(number % 10 === 1) {
+                text = 'produkt';
+            }
+            return text;
+        }
+    },
+    computed: {
+        summary: function() {
+            const sum = this.products.reduce((t, x) => t += x.price, 0).toPrecision(3);
+            const count = this.products.length;
+            const sumCond = this.products.filter(x => x.bought).reduce((t, x) => t += x.price, 0).toPrecision(3);
+            const countCond = this.products.filter(x => x.bought).length;
+            return `${count} ${this.text(count)} (${sum} zł) | Kupionych: ${countCond} ${this.text(countCond)} (${sumCond} zł)`;
+        }
     }
 }
 </script>
@@ -66,6 +92,9 @@ export default {
     }
     .product-list > li:hover {
         background-color: #f2f6f2;
+    }
+    .product-list > li:last-child {
+        border-bottom: 2px solid #eee;
     }
     .product-content {
         padding: 0 8px;
