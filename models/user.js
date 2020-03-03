@@ -13,7 +13,10 @@ const itemSchema = new Schema({
         default: false
     },
     category: Schema.Types.ObjectId,
-    description: String,
+    description: {
+        type: String,
+        default: ''
+    },
     priority: {
        type: Number,
        default: 1

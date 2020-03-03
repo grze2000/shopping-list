@@ -9,7 +9,7 @@
         <Content>
             <ProductView v-if="activeProduct" :product="activeProduct" :categories="categories" @editProduct="editProduct" @addProduct="saveProduct"></ProductView>
             <ProductList v-else :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"
-            @modifyProduct="modifyProduct" @addProduct="addProduct"></ProductList>
+            @modifyProduct="modifyProduct" @addProduct="addProduct" :add="addToSelected"></ProductList>
         </Content>
     </main>
 </template>
@@ -42,6 +42,7 @@ export default {
             },
             activeProduct: undefined,
             selected: 0,
+            addToSelected: true
         }
     },
     async created() {
@@ -77,6 +78,7 @@ export default {
         selectList(id) {
             this.activeProduct = undefined;
             this.selected = id;
+            this.addToSelected = true;
             axios.get(`${process.env.VUE_APP_API_URL}/lists/${id}/items`)
             .then(response => {
                 this.activeList = response.data;
@@ -137,7 +139,10 @@ export default {
             this.activeProduct = {
                 name: '',
                 price: 0,
-                priority: 1
+                priority: 1,
+                description: '',
+                firstURL: '',
+                secondURL: ''
             }
         },
         editProduct(id) {
@@ -164,6 +169,7 @@ export default {
         selectCategory(id) {
             this.activeProduct = undefined;
             this.selected = id;
+            this.addToSelected = false;
             axios.get(`${process.env.VUE_APP_API_URL}/categories/${id}/items`)
             .then(response => {
                 this.activeList = response.data;

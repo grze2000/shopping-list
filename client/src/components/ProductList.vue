@@ -3,7 +3,7 @@
         <h3 class="product-list-title">
             {{ typeof title !== 'undefined' ? title : 'Nie wybrano listy' }}
             <div class="product-title-icons">
-                <i class="icon-plus" title="Dodaj produkt" v-if="title" @click="$emit('addProduct')"></i>
+                <i class="icon-plus" title="Dodaj produkt" v-if="add" @click="$emit('addProduct')"></i>
             </div>
         </h3>
         <ul class="product-list">
@@ -28,8 +28,14 @@
             <template slot-scope="product" v-if="product.data">
                 <li>
                     <a :href="product.data.firstURL" target="_blank" v-if="product.data.firstURL !== ''">{{ 'Przejdź do '+product.data.firstURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
+                </li>
+                <li>
                     <a :href="product.data.secondURL" target="_blank" v-if="product.data.secondURL !== ''">{{ 'Przejdź do '+product.data.secondURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
+                </li>
+                <li>
                     <a href="#" @click.prevent="$emit('modifyProduct', product.data._id)">Edytuj</a>
+                </li>
+                <li>
                     <a href="#" @click.prevent="$emit('removeProduct', product.data._id)">Usuń</a>
                 </li>
             </template>
@@ -42,14 +48,14 @@ import VueContext from 'vue-context'
 
 export default {
     name: 'ProductList',
-    props: ['title', 'products'],
+    props: ['title', 'products', 'add'],
     components: {
         VueContext
     },
     methods: {
         text(number) {
             let text = 'produktów';
-            if([1, 2, 3, 4].includes(number % 10)) {
+            if([2, 3, 4].includes(number % 10)) {
                 text = 'produkty';
             } else if(number % 10 === 1) {
                 text = 'produkt';
