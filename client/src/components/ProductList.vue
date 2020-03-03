@@ -7,7 +7,7 @@
             </div>
         </h3>
         <ul class="product-list">
-            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product._id)">
+            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product)">
                 <div class="checkbox"></div>
                 <div class="product-content">
                     {{ product.name}}{{ product.price ? ` (${product.price} zł)` : '' }}
@@ -19,10 +19,12 @@
             </li>
         </ul>
         <vue-context ref="productContextMenu">
-            <template slot-scope="productId">
+            <template slot-scope="product" v-if="product.data">
                 <li>
-                    <a href="#" @click.prevent="$emit('modifyProduct', productId.data)">Edytuj</a>
-                    <a href="#" @click.prevent="$emit('removeProduct', productId.data)">Usuń</a>
+                    <a :href="product.data.firstURL" target="_blank" v-if="product.data.firstURL !== ''">{{ 'Przejdź do '+product.data.firstURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
+                    <a :href="product.data.secondURL" target="_blank" v-if="product.data.secondURL !== ''">{{ 'Przejdź do '+product.data.secondURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
+                    <a href="#" @click.prevent="$emit('modifyProduct', product.data._id)">Edytuj</a>
+                    <a href="#" @click.prevent="$emit('removeProduct', product.data._id)">Usuń</a>
                 </li>
             </template>
         </vue-context>

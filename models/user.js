@@ -18,8 +18,14 @@ const itemSchema = new Schema({
        type: Number,
        default: 1
     },
-    firstURL: String,
-    secondURL: String
+    firstURL: {
+        type: String,
+        default: ''
+    },
+    secondURL: {
+        type: String,
+        default: ''
+    }
    
 },{_id: true});
 
