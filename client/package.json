@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "lodash.orderby": "^4.6.0",
     "vue": "^2.6.10",
     "vue-context": "^5.0.0",
     "vue-router": "^3.1.3"

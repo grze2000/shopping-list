@@ -3,11 +3,17 @@
         <h3 class="product-list-title">
             {{ typeof title !== 'undefined' ? title : 'Nie wybrano listy' }}
             <div class="product-title-icons">
+                <i class="icon-sort-alt-down" @click="sortSelect = !sortSelect" title="Sortowanie"></i>
+                <transition name="slide">
+                    <select class="sort-type" v-if="sortSelect" v-model="sortType" @change="changeSortType">
+                        <option v-for="type in sortTypes" :key="type.name" :value="type.value">{{ type.name }}</option>
+                    </select>
+                </transition>
                 <i class="icon-plus" title="Dodaj produkt" v-if="add" @click="$emit('addProduct')"></i>
             </div>
         </h3>
         <ul class="product-list">
-            <li v-for="product in products" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product)">
+            <li v-for="product in orderedProducts" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product)">
                 <div class="checkbox"></div>
                 <div class="product-content">
                     {{ product.name}}{{ product.price ? ` (${product.price} zł)` : '' }}
@@ -45,12 +51,51 @@
 
 <script>
 import VueContext from 'vue-context'
+import orderBy from 'lodash.orderby'
+import axios from 'axios'
 
 export default {
     name: 'ProductList',
     props: ['title', 'products', 'add'],
     components: {
         VueContext
+    },
+    data() {
+        return {
+            sortSelect: false,
+            sortType: 'name asc',
+            sortTypes: [
+                {
+                    value: 'name asc',
+                    name: 'Nazwa'
+                },
+                {
+                    value: 'price asc',
+                    name: 'Cena (rosnąco)'
+                },
+                {
+                    value: 'price desc',
+                    name: 'Cena (malejąco)'
+                },
+                {
+                    value: 'priority desc',
+                    name: 'Priorytet'
+                },
+                {
+                    value: 'bought asc',
+                    name: 'Stan'
+                }
+            ]
+        }
+    },
+    created() {
+        axios.get(`${process.env.VUE_APP_API_URL}/user`)
+        .then(response => {
+            this.sortType = response.data.sortType;
+        })
+        .catch(err => {
+            console.error(err);
+        })
     },
     methods: {
         text(number) {
@@ -61,6 +106,12 @@ export default {
                 text = 'produkt';
             }
             return text;
+        },
+        changeSortType() {
+            axios.patch(`${process.env.VUE_APP_API_URL}/user`, {sortType: this.sortType})
+            .catch(err => {
+                console.error(err);
+            })
         }
     },
     computed: {
@@ -70,6 +121,9 @@ export default {
             const sumCond = this.products.filter(x => x.bought).reduce((t, x) => t += x.price, 0).toPrecision(3);
             const countCond = this.products.filter(x => x.bought).length;
             return `${count} ${this.text(count)} (${sum} zł) | Kupionych: ${countCond} ${this.text(countCond)} (${sumCond} zł)`;
+        },
+        orderedProducts: function() {
+            return orderBy(this.products, [this.sortType.split(' ')[0], 'name'], this.sortType.split(' ')[1]);
         }
     }
 }
@@ -114,6 +168,7 @@ export default {
     }
     .product-title-icons {
         margin-left: auto;
+        min-height: 25px;
     }
     .product-list-title i {
         color: var(--main-bg-color);
@@ -146,5 +201,24 @@ export default {
     }
     .product-list > li.checked {
         background-color: #e5f0ea;
+    }
+    .sort-type {
+        border-radius: 3px;
+        padding: 2px;
+        margin: 0 5px;
+    }
+    .slide-enter-active {
+        animation: slide-in 1s;
+    }
+    .slide-leave-active {
+        animation: slide-in 1s reverse;
+    }
+    @keyframes slide-in {
+        from {
+            max-width: 0;
+        }
+        to {
+            max-width: 126px;
+        }
     }
 </style>
