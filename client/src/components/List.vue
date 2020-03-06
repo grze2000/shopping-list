@@ -59,7 +59,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
     .list {
         list-style-type: none;
         padding: 0;
@@ -70,13 +70,13 @@ export default {
         cursor: pointer;
         display: flex;
     }
-    .list > li:hover {
+    .list > li:hover, .all-products:hover {
         background-color: var(--main-bg-hover-color);
     }
-    .list > li > span {
+    .list > li > span, .all-products > span {
         margin-left: auto;
         background-color: #ffffff2d;
-        height: 100%;
+        align-self: start;
         padding: 0 7px;
         text-align: center;
         border-radius: 2px;

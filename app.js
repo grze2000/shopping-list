@@ -268,5 +268,27 @@ app.get('/categories/:categoryId/items', passport.authenticate('jwt', {session: 
     }
 });
 
+app.get('/products', passport.authenticate('jwt', {session: false}), (req, res) => {
+    var data = {
+        name: 'Wszytkie produkty',
+        items: [],
+        itemCount: 0
+    };
+    for(list of req.user.lists) {
+        data.items = data.items.concat(list.items);
+    }
+    data.itemCount = data.items.length;
+    res.json(data);
+});
+
+app.get('/product-count', passport.authenticate('jwt', {session: false}), (req, res) => {
+    var count = 0;
+    for(list of req.user.lists) {
+        count += list.items.length;
+    }
+    res.json({productCount: count});
+});
+
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on ${port}`));

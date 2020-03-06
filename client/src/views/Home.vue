@@ -4,6 +4,7 @@
             <h2 class="app-name">{{ appName }}</h2>
             <List :items="categories" :selected="selected" @selectItem="selectCategory" @addItem="addCategory" title="Kategorie"></List>
             <List :items="lists" :selected="selected" @selectItem="selectList" @addItem="addList" @removeItem="removeList" title="Listy"></List>
+            <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">Wszystkie produkty<span>{{ productCount }}</span></h4>
             <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
         <Content>
@@ -36,6 +37,7 @@ export default {
             appName: process.env.VUE_APP_NAME,
             categories: [],
             lists: [],
+            productCount: 0,
             activeList: {
                 name: undefined,
                 items: []
@@ -50,8 +52,10 @@ export default {
             axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
             const lists = await axios.get(`${process.env.VUE_APP_API_URL}/lists`);
             const categories = await axios.get(`${process.env.VUE_APP_API_URL}/categories`);
+            const products = await axios.get(`${process.env.VUE_APP_API_URL}/product-count`);
             this.lists = lists.data;
             this.categories = categories.data;
+            this.productCount = products.data.productCount;
         } catch(err) {
             this.$router.push('/login');
         }
@@ -65,8 +69,10 @@ export default {
             try {
                 const lists = await axios.get(`${process.env.VUE_APP_API_URL}/lists`);
                 const categories = await axios.get(`${process.env.VUE_APP_API_URL}/categories`);
+                const products = await axios.get(`${process.env.VUE_APP_API_URL}/product-count`);
                 this.lists = lists.data;
                 this.categories = categories.data;
+                this.productCount = products.data.productCount;
                 if(this.selected) {
                     const products = await axios.get(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items`);
                     this.activeList = products.data;
@@ -74,6 +80,19 @@ export default {
             } catch(err) {
                 console.error(err);
             }
+        },
+        showAll() {
+            this.activeProduct = undefined;
+            this.selected = 'all-products';
+            this.addToSelected = false;
+            axios.get(`${process.env.VUE_APP_API_URL}/products`)
+            .then(response => {
+                this.activeList = response.data;
+                this.productCount = response.data.itemCount;
+            })
+            .catch(err => {
+                console.error(err);
+            });
         },
         selectList(id) {
             this.activeProduct = undefined;
@@ -208,5 +227,11 @@ export default {
     }
     i:hover {
         color: var(--main-font-color);
+    }
+    .all-products {
+        padding: 4px 10px;
+        cursor: pointer;
+        display: flex;
+        margin: 25px 0 10px 0;
     }
 </style>
