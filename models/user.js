@@ -57,7 +57,11 @@ const UserSchema = new Schema({
         required: true
     },
     lists: [listSchema],
-    categories: [categorySchema]
+    categories: [categorySchema],
+    sortType: {
+        type: String,
+        default: 'name asc'
+    }
 });
 
 UserSchema.pre('save', function(next) {
