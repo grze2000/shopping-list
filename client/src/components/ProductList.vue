@@ -116,9 +116,9 @@ export default {
     },
     computed: {
         summary: function() {
-            const sum = this.products.reduce((t, x) => t += x.price, 0).toPrecision(3);
+            const sum = this.products.reduce((t, x) => t += x.price, 0).toFixed(2);
             const count = this.products.length;
-            const sumCond = this.products.filter(x => x.bought).reduce((t, x) => t += x.price, 0).toPrecision(3);
+            const sumCond = this.products.filter(x => x.bought).reduce((t, x) => t += x.price, 0).toFixed(2);
             const countCond = this.products.filter(x => x.bought).length;
             return `${count} ${this.text(count)} (${sum} zł) | Kupionych: ${countCond} ${this.text(countCond)} (${sumCond} zł)`;
         },

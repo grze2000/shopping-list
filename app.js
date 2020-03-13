@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('./models/user');
 
-const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]+$/;
+const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']+$/;
 
 mongoose.connect(process.env.MONGODB_URI, {useUnifiedTopology: true, useNewUrlParser: true}).then(() => {
     console.log('Conected to database')
@@ -128,8 +128,13 @@ app.delete('/lists/:id', passport.authenticate('jwt', {session: false}), (req, r
 
 app.get('/lists/:listId/items', passport.authenticate('jwt', {session: false}), (req, res) => {
     const list = req.user.lists.find(list => list._id.equals(req.params.listId));
-    if(list !== -1) {
-        res.json(list);
+    if(typeof list !== 'undefined') {
+        var result = list.toObject();
+        result.items = result.items.map(x => {
+            x.listId = list._id;
+            return x;
+        });
+        res.json(result);
     } else {
         res.status(400).json({message: 'Nie istnieje lista o podanym id'});
     }
@@ -140,10 +145,11 @@ app.post('/lists/:listId/items', passport.authenticate('jwt', {session: false}),
     if(index !== -1) {
         if(req.body.name) {
             if(nameRegex.test(req.body.name)) {
-                req.user.lists[index].items.push({
-                    name: req.body.name,
-                    price: req.body.price ? parseFloat(req.body.price) : null
-                });
+                if(/^(I'm |I am )/.test(req.body.name)) {
+                    res.status(418).json({message: 'And I... am... a teapot'});
+                    return;
+                }
+                req.user.lists[index].items.push(req.body);
                 req.user.save(err => {
                     if(err) {
                         res.status(500).json({message: 'Nie można dodać produktu'});
@@ -257,7 +263,7 @@ app.get('/categories/:categoryId/items', passport.authenticate('jwt', {session: 
         for(list of req.user.lists) {
             for(item of list.items) {
                 if(req.params.categoryId == item.category) {
-                    data.items.push(item);
+                    data.items.push(Object.assign({listId: list._id}, item.toObject()));
                 }
             }
         }
@@ -275,7 +281,10 @@ app.get('/products', passport.authenticate('jwt', {session: false}), (req, res) 
         itemCount: 0
     };
     for(list of req.user.lists) {
-        data.items = data.items.concat(list.items);
+        data.items = data.items.concat(list.items.toObject().map(x => {
+            x.listId = list._id;
+            return x;
+        }));
     }
     data.itemCount = data.items.length;
     res.json(data);

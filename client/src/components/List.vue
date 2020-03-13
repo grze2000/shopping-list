@@ -41,7 +41,7 @@ export default {
             this.newItemName = this.newItemName.trim();
             if(this.newItemName === '') {
                 alert('Podaj nazwę listy');
-            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]{1,50}$/.test(this.newItemName)) {
+            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']{1,50}$/.test(this.newItemName)) {
                 alert('Nazwa listy zawiera niedozwolone znaki');
             } else {
                 this.$emit('addItem', this.newItemName);

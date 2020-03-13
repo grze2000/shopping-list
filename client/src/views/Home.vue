@@ -44,6 +44,7 @@ export default {
             },
             activeProduct: undefined,
             selected: 0,
+            selectedType: undefined,
             addToSelected: true
         }
     },
@@ -74,8 +75,14 @@ export default {
                 this.categories = categories.data;
                 this.productCount = products.data.productCount;
                 if(this.selected) {
-                    const products = await axios.get(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items`);
-                    this.activeList = products.data;
+                    if(this.selectedType === 'list') {
+                        var activeListProducts = await axios.get(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items`);
+                    } else if(this.selectedType === 'category') {
+                        var activeListProducts = await axios.get(`${process.env.VUE_APP_API_URL}/categories/${this.selected}/items`);
+                    } else if(this.selectedType === 'all') {
+                        var activeListProducts = await axios.get(`${process.env.VUE_APP_API_URL}/products`);
+                    }
+                    this.activeList = activeListProducts.data;
                 }
             } catch(err) {
                 console.error(err);
@@ -84,6 +91,7 @@ export default {
         showAll() {
             this.activeProduct = undefined;
             this.selected = 'all-products';
+            this.selectedType = 'all';
             this.addToSelected = false;
             axios.get(`${process.env.VUE_APP_API_URL}/products`)
             .then(response => {
@@ -97,6 +105,7 @@ export default {
         selectList(id) {
             this.activeProduct = undefined;
             this.selected = id;
+            this.selectedType = 'list';
             this.addToSelected = true;
             axios.get(`${process.env.VUE_APP_API_URL}/lists/${id}/items`)
             .then(response => {
@@ -130,16 +139,16 @@ export default {
         selectProduct(id) {
             const item = this.activeList.items.find(x => x._id === id);
             if(typeof item !== 'undefined') {
-                axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, {bought: item.bought})
+                axios.patch(`${process.env.VUE_APP_API_URL}/lists/${item.listId}/items/${id}`, {bought: item.bought})
                 .catch(err => {
                     console.error(err);
                 });
             }
         },
         removeProduct(id) {
-            const index = this.activeList.items.findIndex(x => x._id === id);
-            if(index !== -1) {
-                axios.delete(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`)
+            const item = this.activeList.items.find(x => x._id === id);
+            if(typeof item !== 'undefined') {
+                axios.delete(`${process.env.VUE_APP_API_URL}/lists/${item.listId}/items/${id}`)
                 .then(response => {
                     this.refresh();
                 })
@@ -166,7 +175,7 @@ export default {
         },
         editProduct(id) {
             const {_id, bought, ...data} = this.activeProduct;
-            axios.patch(`${process.env.VUE_APP_API_URL}/lists/${this.selected}/items/${id}`, data)
+            axios.patch(`${process.env.VUE_APP_API_URL}/lists/${data.listId}/items/${id}`, data)
             .then(response => {
                 this.refresh();
                 this.activeProduct = undefined;
@@ -188,6 +197,7 @@ export default {
         selectCategory(id) {
             this.activeProduct = undefined;
             this.selected = id;
+            this.selectedType = 'category';
             this.addToSelected = false;
             axios.get(`${process.env.VUE_APP_API_URL}/categories/${id}/items`)
             .then(response => {

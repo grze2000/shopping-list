@@ -55,7 +55,7 @@ export default {
         validateForm() {
             if(!this.product.name.trim().length) {
                 this.message = 'Podaj nazwę produktu';
-            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&]+$/.test(this.product.name)) {
+            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']+$/.test(this.product.name)) {
                 this.message = 'Nazwa zawiera nieprawidłowe znaki';
             } else if(isNaN(this.product.price)) {
                 this.message = 'Podaj prawidłową cenę';
