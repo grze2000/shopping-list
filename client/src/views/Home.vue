@@ -2,9 +2,11 @@
     <main class="flex-container"  @contextmenu.prevent="">
         <Sidebar>
             <h2 class="app-name">{{ appName }}</h2>
-            <List :items="categories" :selected="selected" @selectItem="selectCategory" @addItem="addCategory" title="Kategorie"></List>
-            <List :items="lists" :selected="selected" @selectItem="selectList" @addItem="addList" @removeItem="removeList" title="Listy"></List>
-            <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">Wszystkie produkty<span>{{ productCount }}</span></h4>
+            <section class="content-wrapper">
+                <List :items="categories" :selected="selected" @selectItem="selectCategory" @addItem="addCategory" title="Kategorie"></List>
+                <List :items="lists" :selected="selected" @selectItem="selectList" @addItem="addList" @removeItem="removeList" title="Listy"></List>
+                <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">Wszystkie produkty<span>{{ productCount }}</span></h4>
+            </section>
             <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
         </Sidebar>
         <Content>
@@ -243,5 +245,13 @@ export default {
         cursor: pointer;
         display: flex;
         margin: 25px 0 10px 0;
+    }
+    .content-wrapper {
+        max-height: calc(100vh - 108px);
+        overflow: auto;
+    }
+    .content-wrapper::-webkit-scrollbar-thumb {
+        background-color: var(--main-bg-active-color);
+        border-radius: 10px;
     }
 </style>

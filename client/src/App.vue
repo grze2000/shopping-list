@@ -26,6 +26,9 @@
         font-family: 'Montserrat', sans-serif;
         background-color: #eee;
     }
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
     .form input[type=text],
     .form input[type=password],
     .form input[type=email],

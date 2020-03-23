@@ -133,14 +133,20 @@ export default {
     .product-list-container {
         background-color: #f9f9f9;
         border-radius: 5px;
-        -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
-        -moz-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
-        box-shadow: 0px 0px 9px 0px #00000010;
+        -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.063);
+        -moz-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.063);
+        box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.063);
     }
     .product-list {
         list-style: none;
         margin: 0;
         padding: 0;
+        overflow: auto;
+        max-height: calc(100vh - 114px);
+    }
+    .product-list::-webkit-scrollbar-thumb {
+        background-color: var(--main-bg-hover-color);
+        border-radius: 10px;
     }
     .product-list > li {
         border-top: 2px solid #eee;
