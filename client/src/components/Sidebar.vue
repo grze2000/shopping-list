@@ -24,6 +24,23 @@ export default {
     .sidebar-bottom {
         margin-top: auto;
         padding: 10px;
-        text-align: right;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    @media screen and (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }
+        .sidebar-bottom {
+            border-top: 1px solid silver;
+            text-align: center;
+        }
+        .sidebar-bottom i {
+            flex-basis: 33%;
+        }
     }
 </style>
