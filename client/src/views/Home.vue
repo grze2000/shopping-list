@@ -1,13 +1,20 @@
 <template>
     <main class="flex-container"  @contextmenu.prevent="">
-        <Sidebar>
+        <Sidebar :class="{hideSidebar}">
             <h2 class="app-name">{{ appName }}</h2>
             <section class="content-wrapper">
                 <List :items="categories" :selected="selected" @selectItem="selectCategory" @addItem="addCategory" title="Kategorie"></List>
                 <List :items="lists" :selected="selected" @selectItem="selectList" @addItem="addList" @removeItem="removeList" title="Listy"></List>
-                <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">Wszystkie produkty<span>{{ productCount }}</span></h4>
+                <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">
+                    Wszystkie produkty
+                    <span>{{ productCount }}</span>
+                </h4>
             </section>
-            <section class="sidebar-bottom"><i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i><i class="icon-logout" title="Wyloguj się" @click="logout"></i></section>
+            <section class="sidebar-bottom">
+                <i class="icon-list-bullet" @click="hideSidebar = !hideSidebar"></i>
+                <i class="icon-arrows-cw" @click="refresh" title="Odśwież"></i>
+                <i class="icon-logout" title="Wyloguj się" @click="logout"></i>
+            </section>
         </Sidebar>
         <Content>
             <ProductView v-if="activeProduct" :product="activeProduct" :categories="categories" @editProduct="editProduct" @addProduct="saveProduct"></ProductView>
@@ -47,7 +54,8 @@ export default {
             activeProduct: undefined,
             selected: 0,
             selectedType: undefined,
-            addToSelected: true
+            addToSelected: true,
+            hideSidebar: true,
         }
     },
     async created() {
@@ -95,6 +103,7 @@ export default {
             this.selected = 'all-products';
             this.selectedType = 'all';
             this.addToSelected = false;
+            this.hideSidebar = true;
             axios.get(`${process.env.VUE_APP_API_URL}/products`)
             .then(response => {
                 this.activeList = response.data;
@@ -109,6 +118,7 @@ export default {
             this.selected = id;
             this.selectedType = 'list';
             this.addToSelected = true;
+            this.hideSidebar = true;
             axios.get(`${process.env.VUE_APP_API_URL}/lists/${id}/items`)
             .then(response => {
                 this.activeList = response.data;
@@ -201,6 +211,7 @@ export default {
             this.selected = id;
             this.selectedType = 'category';
             this.addToSelected = false;
+            this.hideSidebar = true;
             axios.get(`${process.env.VUE_APP_API_URL}/categories/${id}/items`)
             .then(response => {
                 this.activeList = response.data;
@@ -233,6 +244,8 @@ export default {
     .app-name {
         text-align: center;
         color: var(--main-font-color);
+        margin: 0;
+        padding: 0.8em 0;
     }
     i {
         cursor: pointer;
@@ -253,5 +266,23 @@ export default {
     .content-wrapper::-webkit-scrollbar-thumb {
         background-color: var(--main-bg-active-color);
         border-radius: 10px;
+    }
+    .icon-list-bullet {
+        display: none;
+    }
+    @media screen and (max-width: 768px) {
+        .sidebar .app-name {
+            border-bottom: 1px solid silver;
+        }
+        .hideSidebar .app-name,
+        .hideSidebar .content-wrapper {
+            display: none !important;
+        }
+        .hideSidebar {
+            height: auto !important;
+        }
+        .icon-list-bullet {
+            display: block;
+        }
     }
 </style>

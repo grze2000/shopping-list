@@ -227,4 +227,9 @@ export default {
             max-width: 126px;
         }
     }
+    @media screen and (max-width: 768px) {
+         .product-list {
+            max-height: calc(100vh - 241px);
+        }
+    }
 </style>

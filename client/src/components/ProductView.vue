@@ -142,4 +142,13 @@ export default {
         color: var(--main-bg-color);
         font-weight: bold;
     }
+    @media screen and (max-width: 768px) {
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .grid-container > div {
+            margin: 5px 0;
+        }
+    }
 </style>

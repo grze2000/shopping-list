@@ -17,4 +17,9 @@ export default {
         padding: 15px;
         box-sizing: border-box;
     }
+    @media screen and (max-width: 768px) {
+        .content {
+            width: 100%;
+        }
+    }
 </style>
