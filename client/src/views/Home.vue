@@ -139,7 +139,7 @@ export default {
         removeList(id) {
             axios.delete(`${process.env.VUE_APP_API_URL}/lists/${id}`)
             .then(response => {
-                const index = this.lists.findIndex(x => x.id === id);
+                const index = this.lists.findIndex(x => x._id === id);
                 if(index !== -1) {
                     this.lists.splice(index, 1);
                 }

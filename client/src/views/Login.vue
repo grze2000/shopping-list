@@ -11,8 +11,8 @@
             <div class="form-group">
                 <input type="submit" value="Zaloguj się">
             </div>
-            <div class="form-gorup msg error" v-if="error !== ''">
-                {{ error.data.message }}
+            <div class="form-gorup msg alert alert-error" :class="[alert.type]" v-if="alert.message !== ''">
+                {{ alert.message }}
             </div>
             <div class="form-group msg">
                 Nie masz konta? <a href="#" @click.prevent="register()">Zarejestruj się</a>
@@ -30,7 +30,10 @@ export default {
         return {
             appName: process.env.VUE_APP_NAME,
             login: {},
-            error: ""
+            alert: {
+                type: 'alert-error',
+                message: ''
+            }
         }
     },
     methods: {
@@ -42,7 +45,7 @@ export default {
                 this.$router.push('/');
             })
             .catch(err => {
-                this.error = err.response;
+                this.alert.message = err.response.data.message;
             });
         },
         register() {

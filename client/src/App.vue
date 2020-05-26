@@ -68,12 +68,18 @@
         margin: 0 auto;
         min-width: 300px;
     }
-    .error {
-        background-color: #ff9d9dcc;
+    .alert {
         padding: 7px 0;
         margin: 0 10px;
         border-radius: 1px;
+    }
+    .alert-error {
+        background-color: #ff9d9dcc;
         color: #9c2424cc;
+    }
+    .alert-success {
+        background-color: #98da9c;
+        color: #2d7a50;
     }
     .msg {
         font-size: 0.9em;

@@ -96,6 +96,7 @@ export default {
         margin-right: 2px;
         padding: 0 5px;
         box-sizing: border-box;
+        flex-grow: 1;
     }
     .active {
         color: var(--main-font-color);

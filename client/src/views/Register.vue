@@ -14,8 +14,8 @@
             <div class="form-group">
                 <input type="submit" value="Zarejestruj się"/>
             </div>
-            <div class="form-group msg error" v-if="error !== ''">
-                {{ error.data.message }}
+            <div class="form-group msg alert" :class="[alert.type]" v-if="alert.message !== ''">
+                {{ alert.message }}
             </div>
             <div class="form-group msg">
                 Masz już konto? <a href="" @click.prevent="login()">Zaloguj się</a>
@@ -33,7 +33,10 @@ export default {
         return {
             appName: process.env.VUE_APP_NAME,
             register: {},
-            error: ""
+            alert: {
+                type: 'alert-error',
+                message: ''
+            }
         };
     },
     methods: {
@@ -41,11 +44,13 @@ export default {
             e.preventDefault();
             axios.post(`${process.env.VUE_APP_API_URL}/register`, this.register)
             .then(response => {
-                this.error = {data: {message: 'Konto zostało utworzone. Możesz sie zalogować.'}};
+                this.alert.type = 'alert-success';
+                this.alert.message = 'Konto zostało utworzone. Możesz sie zalogować.';
                 setTimeout(() => this.$router.push('/login'), 2000);
             })
             .catch(err => {
-                this.error = err.response
+                this.alert.type = 'alert-error';
+                this.alert.message = err.response.data.message;
             });
         },
         login() {
