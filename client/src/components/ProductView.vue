@@ -39,7 +39,10 @@
             <div class="grid-item-submit">
                 <div class="grid-item-message">{{ message }}</div>
                 <input v-if="typeof product._id === 'undefined'" type="submit" value="Dodaj" @click.prevent="addProduct">
-                <input v-else type="submit" value="Zapisz" @click.prevent="editProduct">
+                <template v-else>
+                    <input type="submit" value="Anuluj" @click.prevent="$emit('cancel')">
+                    <input type="submit" value="Zapisz" @click.prevent="editProduct">
+                </template>
             </div>
         </form>
     </section>
@@ -121,6 +124,9 @@ export default {
         width: auto !important;
         min-width: 100px;
         font-weight: bold;
+    }
+    .grid-item-submit > input:not(:last-child) {
+        margin-right: 10px;
     }
     .grid-item-description {
         grid-row: 2 / 4;

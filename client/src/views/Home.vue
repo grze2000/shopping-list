@@ -3,8 +3,19 @@
         <Sidebar :class="{hideSidebar}">
             <h2 class="app-name">{{ appName }}</h2>
             <section class="content-wrapper">
-                <List :items="categories" :selected="selected" @selectItem="selectCategory" @addItem="addCategory" title="Kategorie"></List>
-                <List :items="lists" :selected="selected" @selectItem="selectList" @addItem="addList" @removeItem="removeList" title="Listy"></List>
+                <List :items="categories"
+                    :selected="selected"
+                    @selectItem="selectCategory"
+                    @addItem="addCategory"
+                    title="Kategorie"
+                ></List>
+                <List :items="lists"
+                    :selected="selected"
+                    @selectItem="selectList"
+                    @addItem="addList"
+                    @removeItem="removeList"
+                    title="Listy"
+                ></List>
                 <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">
                     Wszystkie produkty
                     <span>{{ productCount }}</span>
@@ -17,9 +28,22 @@
             </section>
         </Sidebar>
         <Content>
-            <ProductView v-if="activeProduct" :product="activeProduct" :categories="categories" @editProduct="editProduct" @addProduct="saveProduct"></ProductView>
-            <ProductList v-else :title="activeList.name" :products="activeList.items" @selectProduct="selectProduct" @removeProduct="removeProduct"
-            @modifyProduct="modifyProduct" @addProduct="addProduct" :add="addToSelected"></ProductList>
+            <ProductView v-if="activeProduct"
+                :product="activeProduct"
+                :categories="categories"
+                @editProduct="editProduct"
+                @addProduct="saveProduct"
+                @cancel="activeProduct = undefined"
+            ></ProductView>
+            <ProductList v-else
+                :title="activeList.name"
+                :add="addToSelected"
+                :products="activeList.items"
+                @selectProduct="selectProduct"
+                @removeProduct="removeProduct"
+                @modifyProduct="modifyProduct"
+                @addProduct="addProduct"
+            ></ProductList>
         </Content>
     </main>
 </template>
