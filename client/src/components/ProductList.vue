@@ -16,7 +16,7 @@
             <li v-for="product in orderedProducts" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product)">
                 <div class="checkbox"></div>
                 <div class="product-content">
-                    {{ product.name}}{{ product.price ? ` (${product.price} zł)` : '' }}
+                    {{ product.name}}{{ product.price ? ` (${(product.quantity > 1 ? product.quantity+'x ' : '')}${product.price} zł)` : '' }}
                 </div>
                 <div class="product-icons">
                     <i class="icon-pencil" @click.stop="$emit('modifyProduct', product._id)"></i>
@@ -116,10 +116,10 @@ export default {
     },
     computed: {
         summary: function() {
-            const sum = this.products.reduce((t, x) => t += x.price, 0).toFixed(2);
-            const count = this.products.length;
-            const sumCond = this.products.filter(x => x.bought).reduce((t, x) => t += x.price, 0).toFixed(2);
-            const countCond = this.products.filter(x => x.bought).length;
+            const sum = this.products.reduce((t, x) => t += x.price*x.quantity, 0).toFixed(2);
+            const count = this.products.reduce((t, x) => t += x.quantity, 0);
+            const sumCond = this.products.filter(x => x.bought).reduce((t, x) => t += x.price*x.quantity, 0).toFixed(2);
+            const countCond = this.products.filter(x => x.bought).reduce((t, x) => t += x.quantity, 0);
             return `${count} ${this.text(count)} (${sum} zł) | Kupionych: ${countCond} ${this.text(countCond)} (${sumCond} zł)`;
         },
         orderedProducts: function() {

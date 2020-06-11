@@ -180,6 +180,7 @@ export default {
                 name: '',
                 price: 0,
                 priority: 1,
+                quantity: 1,
                 description: '',
                 firstURL: '',
                 secondURL: ''

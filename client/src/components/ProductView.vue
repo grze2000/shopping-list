@@ -9,9 +9,9 @@
                 <label for="price">Cena</label>
                 <input type="number" id="price" min="0" step="0.01" v-model.number="product.price"/>
             </div>
-            <div class="grid-item-priority">
-                <label for="priority">Priorytet</label>
-                <input type="number" id="priority" min="0" v-model.number="product.priority"/>
+            <div class="grid-item-quantity">
+                <label for="quantity">Ilość</label>
+                <input type="number" id="quantity" min="1" v-model.number="product.quantity"/>
             </div>
             <div class="grid-item-description">
                 <label for="description">Opis</label>
@@ -23,6 +23,10 @@
                     <option value="">Bez kategorii</option>
                     <option v-for="category in categories" :key="category._id" :value="category._id">{{ category.name }}</option>
                 </select>
+            </div>
+            <div class="grid-item-priority">
+                <label for="priority">Priorytet</label>
+                <input type="number" id="priority" min="0" v-model.number="product.priority"/>
             </div>
             <div class="grid-item-link1">
                 <label for="allegro-link">Link do sklepu</label> 
@@ -101,6 +105,10 @@ export default {
         grid-column: 1 / 2;
         grid-row: 2 / 3;
     }
+    .grid-item-quantity {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+    }
     .grid-item-submit {
         grid-row: 5 / 6;
         grid-column: 1 / 5;
@@ -125,7 +133,11 @@ export default {
     }
     .grid-item-category {
         grid-row: 3 / 4;
-        grid-column: 1 / 3;
+        grid-column: 1 / 2;
+    }
+    .grid-item-priority {
+        grid-row: 3 / 4;
+        grid-column: 2 / 3;
     }
     .grid-item-link1 {
         grid-row: 4 / 5;

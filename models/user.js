@@ -13,6 +13,12 @@ const itemSchema = new Schema({
         default: 0,
         min: 0
     },
+    quantity: {
+        type: Number,
+        required: true,
+        default: 1,
+        min: 1
+    },
     bought: {
         type: Boolean,
         default: false
