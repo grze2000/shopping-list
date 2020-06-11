@@ -100,9 +100,9 @@ export default {
     methods: {
         text(number) {
             let text = 'produktów';
-            if([2, 3, 4].includes(number % 10)) {
+            if([2, 3, 4].includes(number % 10) && Math.floor(number / 10) % 10 !== 1) {
                 text = 'produkty';
-            } else if(number % 10 === 1) {
+            } else if(number === 1) {
                 text = 'produkt';
             }
             return text;
