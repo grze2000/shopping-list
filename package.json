@@ -1,13 +1,13 @@
 {
   "name": "shoppinglist",
   "version": "1.0.0",
-  "description": "",
+  "description": "MEVN Stack shopping list",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "author": "Grzegorz Babiarz",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
@@ -16,5 +16,9 @@
     "mongoose": "^5.9.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grze2000/shopping-list.git"
   }
 }
