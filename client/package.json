@@ -9,13 +9,13 @@
   "dependencies": {
     "axios": "^0.19.2",
     "lodash.orderby": "^4.6.0",
-    "vue": "^2.6.10",
-    "vue-context": "^5.1.0",
-    "vue-router": "^3.2.0"
+    "vue": "^2.6.12",
+    "vue-context": "^5.2.0",
+    "vue-router": "^3.4.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-router": "^4.3.1",
-    "@vue/cli-service": "^4.3.1",
-    "vue-template-compiler": "^2.6.10"
+    "@vue/cli-plugin-router": "^4.5.6",
+    "@vue/cli-service": "^4.5.6",
+    "vue-template-compiler": "^2.6.12"
   }
 }
