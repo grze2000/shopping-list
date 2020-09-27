@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="loaded">
         <h1 class="app-name">{{ appName }}</h1>
         <form @submit.prevent="onSubmit" class="form form30 text-center">
             <div class="form-group">
@@ -33,8 +33,16 @@ export default {
             alert: {
                 type: 'alert-error',
                 message: ''
-            }
+            },
+            loaded: false
         }
+    },
+    created() {
+        axios.get('/user').then(() => {
+            this.loaded = true;
+        }).catch(() => {
+            this.$router.push('/');
+        });
     },
     methods: {
         onSubmit(e) {

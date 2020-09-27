@@ -1,5 +1,5 @@
 <template>
-    <main class="flex-container"  @contextmenu.prevent="">
+    <main class="flex-container"  @contextmenu.prevent="" v-if="loaded">
         <Sidebar :class="{hideSidebar}">
             <h2 class="app-name">{{ appName }}</h2>
             <section class="content-wrapper">
@@ -80,6 +80,7 @@ export default {
             selectedType: undefined,
             addToSelected: true,
             hideSidebar: true,
+            loaded: false
         }
     },
     async created() {
@@ -91,6 +92,7 @@ export default {
             this.lists = lists.data;
             this.categories = categories.data;
             this.productCount = products.data.productCount;
+            this.loaded = true;
         } catch(err) {
             this.$router.push('/login');
         }
