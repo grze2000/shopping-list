@@ -16,6 +16,9 @@
                 <li>
                     <a href="#" @click.prevent="$emit('removeItem', listId.data)">Usuń</a>
                 </li>
+                <li>
+                    <a href="#" @click.prevent="">Zmień nazwę</a>
+                </li>
             </template>
         </vue-context>
     </div>
