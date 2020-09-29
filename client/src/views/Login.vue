@@ -1,7 +1,7 @@
 <template>
     <div v-if="loaded">
         <h1 class="app-name">{{ appName }}</h1>
-        <form @submit.prevent="onSubmit" class="form form30 text-center">
+        <form class="form form30 text-center">
             <div class="form-group">
                 <input type="email" placeholder="Email" v-model.trim="login.email"/>
             </div>
@@ -9,7 +9,7 @@
                 <input type="password" placeholder="Hasło" v-model.trim="login.password"/>
             </div>
             <div class="form-group">
-                <input type="submit" value="Zaloguj się">
+                <input type="submit" @click.prevent="onSubmit" value="Zaloguj się">
             </div>
             <div class="form-gorup msg alert alert-error" :class="[alert.type]" v-if="alert.message !== ''">
                 {{ alert.message }}
@@ -38,10 +38,13 @@ export default {
         }
     },
     created() {
-        axios.get('/user').then(() => {
-            this.loaded = true;
-        }).catch(() => {
+        axios.get(`${process.env.VUE_APP_API_URL}/user`).then(() => {
             this.$router.push('/');
+        }).catch(err => {
+           if(err.response.status != 401) {
+               console.log(err);
+           }
+           this.loaded = true;
         });
     },
     methods: {

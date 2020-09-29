@@ -1,3 +1,6 @@
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+
 exports.register = (req, res) => {
     if(!req.body.email || !req.body.password || !req.body.passwordRepeat) {
         res.status(400).json({success: false, message: 'Podaj prawidłowy email i hasło'});
@@ -20,7 +23,6 @@ exports.register = (req, res) => {
 exports.login = (req, res) => {
     User.findOne({email: req.body.email}, (err, user) => {
         if(err) throw err;
-
         if(!user) {
             res.status(401).json({success: false, message: 'Nieprawidłowy adres email'});
         } else {
