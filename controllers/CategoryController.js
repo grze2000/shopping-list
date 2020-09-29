@@ -36,6 +36,31 @@ exports.addCategory = (req, res) => {
     }
 }
 
+exports.renameCategory = (req, res) => {
+    const index = req.user.categories.findIndex(x => x._id.equals(req.params.id));
+    if(index === -1) {
+        res.status(400).json({message: 'Nie istnieje kategoria o podanym id!'});
+        return;
+    }
+    if(!req.body.name.length) {
+        res.status(400).json({message: 'Nie podano nazwy kategorii'});
+        return;
+    }
+    if(!nameRegex.test(req.body.name)) {
+        res.status(400).json({message: 'Nazwa zawiera niedozwolone znaki'});
+        return;
+    }
+    req.user.categories[index].name = req.body.name;
+    req.user.save(err => {
+        if(err) {
+            console.log(err);
+            res.status(500).json({message: 'Nie udało się zmienić nazwy kategorii'});
+        } else {
+            res.sendStatus(201);
+        }
+    });
+}
+
 exports.getItems = (req, res) => {
     const category = req.user.categories.find(x => x._id.equals(req.params.categoryId));
     if(category !== -1) {

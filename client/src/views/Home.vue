@@ -8,6 +8,7 @@
                     @selectItem="selectCategory"
                     @addItem="addCategory"
                     @removeItem="removeCategory"
+                    @renameItem="rename($event, 'categories')"
                     title="Kategorie"
                 ></List>
                 <List :items="lists"
@@ -15,7 +16,7 @@
                     @selectItem="selectList"
                     @addItem="addList"
                     @removeItem="removeList"
-                    @renameItem="renameList"
+                    @renameItem="rename($event, 'lists')"
                     title="Listy"
                 ></List>
                 <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">
@@ -270,9 +271,9 @@ export default {
                 console.error(err);
             });
         },
-        renameList(data) {
+        rename(data, type) {
             const {id, name} = data;
-            axios.patch(`${process.env.VUE_APP_API_URL}/lists/${id}`, {name: name})
+            axios.patch(`${process.env.VUE_APP_API_URL}/${type}/${id}`, {name: name})
             .then(response => {
                 this.refresh();
             })
