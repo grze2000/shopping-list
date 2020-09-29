@@ -37,6 +37,7 @@ app.patch('/user', passport.authenticate('jwt', {session: false}), UserControlle
 
 app.get('/lists', passport.authenticate('jwt', {session: false}), ListController.getLists);
 app.post('/lists', passport.authenticate('jwt', {session: false}), ListController.addList);
+app.patch('/lists/:id', passport.authenticate('jwt', {session: false}), ListController.renameList);
 app.delete('/lists/:id', passport.authenticate('jwt', {session: false}), ListController.removeList);
 
 app.get('/lists/:listId/items', passport.authenticate('jwt', {session: false}), ListController.getItems);

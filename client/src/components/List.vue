@@ -1,23 +1,34 @@
 <template>
     <div>
-        <h4 class="list-title">{{ title }}<i class="icon-plus" @click="showInput()"></i></h4>
+        <h4 class="list-title">{{ title }}<i class="icon-plus" @click="showAddInput()"></i></h4>
         <ul class="list">
             <li class="product-add" v-if="add">
-                <input type="text" ref="input" maxlength="50" v-model="newItemName" @keyup.enter="addItem()" @keyup.esc="add = false; newItemName = ''"/>
+                <input type="text" ref="addInput" maxlength="50" v-model="newItemName" @keyup.enter="addItem()" @keyup.esc="add = false; newItemName = ''"/>
                 <i class="icon-ok" @click="addItem()"></i>
                 <i class="icon-cancel" @click="add = false; newItemName = ''"></i>
             </li>
-            <li v-for="item in items" :key="item._id" @click="$emit('selectItem', item._id);" :class="selected===item._id ? 'active' : ''" @contextmenu.prevent="$refs.listContextMenu.open($event, item._id)">
-                {{ item.name }}<span>{{ item.itemCount }}</span>
+            <li v-for="item in items" 
+                :key="item._id"
+                @click="$emit('selectItem', item._id);"
+                :class="{'active': selected===item._id, 'product-add': rename.itemID === item._id}"
+                @contextmenu.prevent="$refs.listContextMenu.open($event, {id: item._id, name: item.name})">
+                <template v-if="rename.itemID === item._id">
+                    <input type="text" ref="renameInput" maxlength="50" v-model="rename.value" @keyup.enter="renameItem()" @keyup.esc="rename.itemID = null"/>
+                    <i class="icon-ok" @click="renameItem()"></i>
+                    <i class="icon-cancel" @click="rename.itemID = null"></i>
+                </template>
+                <template v-else>
+                    {{ item.name }}<span>{{ item.itemCount }}</span>
+                </template>
             </li>
         </ul>
         <vue-context ref="listContextMenu">
             <template slot-scope="listId">
                 <li>
-                    <a href="#" @click.prevent="$emit('removeItem', listId.data)">Usuń</a>
+                    <a href="#" @click.prevent="showRenameInput(listId.data)">Zmień nazwę</a>
                 </li>
                 <li>
-                    <a href="#" @click.prevent="">Zmień nazwę</a>
+                    <a href="#" @click.prevent="$emit('removeItem', listId.data.id)">Usuń</a>
                 </li>
             </template>
         </vue-context>
@@ -36,10 +47,30 @@ export default {
     data() {
         return {
             add: false,
-            newItemName: ''
+            newItemName: '',
+            rename: {
+                itemID: null,
+                value: ''
+            }
         }
     },
     methods: {
+        renameItem() {
+            if(!this.rename.value.trim().length) {
+                alert('Podaj nazwę listy');
+            } else if(!/^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']{1,50}$/.test(this.rename.value)) {
+                alert('Nazwa listy zawiera niedozwolone znaki');
+            } else {
+                this.$emit('renameItem', {id: this.rename.itemID, name: this.rename.value});
+                this.rename.itemID = null;
+                this.rename.value = '';
+            }
+        },
+        showRenameInput(item) {
+            this.rename.itemID = item.id;
+            this.rename.value = item.name;
+            this.$nextTick(() => this.$refs.renameInput[0].focus());
+        },
         addItem() {
             this.newItemName = this.newItemName.trim();
             if(this.newItemName === '') {
@@ -52,10 +83,10 @@ export default {
                 this.newItemName = ''
             }
         },
-        showInput() {
+        showAddInput() {
             this.add = !this.add;
             if(this.add) {
-                this.$nextTick(() => this.$refs.input.focus());
+                this.$nextTick(() => this.$refs.addInput.focus());
             }
         }
     }

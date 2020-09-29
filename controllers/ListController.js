@@ -1,4 +1,4 @@
-const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']+$/;
+const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']{1,50}$/;
 
 exports.getLists = (req, res) => {
     res.json(req.user.lists.map(x => ({_id: x._id, name: x.name, itemCount: x.items.length})));
@@ -24,6 +24,31 @@ exports.addList = (req, res) => {
     } else {
         res.status(400).json({message: 'Nie podano nazwy listy'});
     }
+}
+
+exports.renameList = (req, res) => {
+    const index = req.user.lists.findIndex(x => x._id.equals(req.params.id));
+    if(index === -1) {
+        res.status(400).json({message: 'Nie istnieje lista o podanym id!'});
+        return;
+    }
+    if(!req.body.name.length) {
+        res.status(400).json({message: 'Nie podano nazwy listy'});
+        return;
+    }
+    if(!nameRegex.test(req.body.name)) {
+        res.status(400).json({message: 'Nazwa zawiera niedozwolone znaki'});
+        return;
+    }
+    req.user.lists[index].name = req.body.name;
+    req.user.save(err => {
+        if(err) {
+            console.log(err);
+            res.status(500).json({message: 'Nie udało się zmienić nazwy listy'});
+        } else {
+            res.sendStatus(201);
+        }
+    });
 }
 
 exports.removeList = (req, res) => {

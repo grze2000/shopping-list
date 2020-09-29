@@ -1,4 +1,4 @@
-const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']+$/;
+const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']{1,50}$/;
 
 exports.getCategories = (req, res) => {
     var categories = req.user.categories.map(x => ({_id: x._id, name: x.name, itemCount: 0}));

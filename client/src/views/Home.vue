@@ -15,6 +15,7 @@
                     @selectItem="selectList"
                     @addItem="addList"
                     @removeItem="removeList"
+                    @renameItem="renameList"
                     title="Listy"
                 ></List>
                 <h4 class="list-title all-products" :class="selected==='all-products' ? 'active' : ''" @click="showAll">
@@ -269,6 +270,16 @@ export default {
                 console.error(err);
             });
         },
+        renameList(data) {
+            const {id, name} = data;
+            axios.patch(`${process.env.VUE_APP_API_URL}/lists/${id}`, {name: name})
+            .then(response => {
+                this.refresh();
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        }
     }
 }
 </script>
