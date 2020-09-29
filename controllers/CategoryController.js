@@ -1,3 +1,5 @@
+const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']+$/;
+
 exports.getCategories = (req, res) => {
     var categories = req.user.categories.map(x => ({_id: x._id, name: x.name, itemCount: 0}));
     for(list of req.user.lists) {
@@ -54,4 +56,11 @@ exports.getItems = (req, res) => {
     } else {
         res.status(400).json({message: 'Nie istnieje kategoria o podanym id'});
     }
+}
+
+exports.removeCategory = (req, res) => {
+    req.user.categories = req.user.categories.filter(category => !category._id.equals(req.params.id));
+    req.user.save(err => {
+        err ? res.sendStatus(500) : res.sendStatus(200);
+    });
 }

@@ -1,3 +1,5 @@
+const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']+$/;
+
 exports.getLists = (req, res) => {
     res.json(req.user.lists.map(x => ({_id: x._id, name: x.name, itemCount: x.items.length})));
 }

@@ -12,9 +12,6 @@ const ListController = require('./controllers/ListController');
 const CategoryController = require('./controllers/CategoryController');
 const ProductController = require('./controllers/ProductController');
 
-
-const nameRegex = /^[\wżźćńółęąśŻŹĆĄŚĘŁÓŃ \.!?,:;\-&']+$/;
-
 mongoose.connect(process.env.MONGODB_URI, {useUnifiedTopology: true, useNewUrlParser: true}).then(() => {
     console.log('Conected to database')
 }).catch((err) => {
@@ -49,6 +46,7 @@ app.delete('/lists/:listId/items/:itemId', passport.authenticate('jwt', {session
 
 app.get('/categories', passport.authenticate('jwt', {session: false}), CategoryController.getCategories);
 app.post('/categories', passport.authenticate('jwt', {session: false}), CategoryController.addCategory);
+app.delete('/categories/:id', passport.authenticate('jwt', {session: false}), CategoryController.removeCategory);
 app.get('/categories/:categoryId/items', passport.authenticate('jwt', {session: false}), CategoryController.getItems);
 
 app.get('/products', passport.authenticate('jwt', {session: false}), ProductController.getProducts);
