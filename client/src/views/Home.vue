@@ -7,6 +7,7 @@
                     :selected="selected"
                     @selectItem="selectCategory"
                     @addItem="addCategory"
+                    @removeItem="removeCategory"
                     title="Kategorie"
                 ></List>
                 <List :items="lists"
@@ -168,6 +169,18 @@ export default {
                 const index = this.lists.findIndex(x => x._id === id);
                 if(index !== -1) {
                     this.lists.splice(index, 1);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        },
+        removeCategory(id) {
+            axios.delete(`${process.env.VUE_APP_API_URL}/categories/${id}`)
+            .then(response => {
+                const index = this.categories.findIndex(x => x._id === id);
+                if(index !== -1) {
+                    this.categories.splice(index, 1);
                 }
             })
             .catch(err => {
