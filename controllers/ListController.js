@@ -128,22 +128,21 @@ exports.updateItem = (req, res) => {
 }
 
 exports.removeItem = (req, res) => {
-    const listIndex = req.user.lists.findIndex(list => list._id.equals(req.params.listId));
-    if(listIndex !== -1) {
-        const itemIndex = req.user.lists[listIndex].items.findIndex(item => item._id.equals(req.params.itemId));
-        if(itemIndex !== -1) {
-            req.user.lists[listIndex].items.splice(itemIndex, 1);
-            req.user.save(err => {
-                if(err) {
-                    res.status(500).json({message: 'Nie można usunąć produktu'});
-                } else {
-                    res.sendStatus(200);
-                }
-            });
-        } else {
-            res.status(400).json({message: 'Nie istnieje produkt o podanym id'});
-        }
-    } else {
+    if(!req.user.lists.id(req.params.listId)) {
         res.status(400).json({message: 'Nie istnieje lista o podanym id'});
+        return;
     }
+    if(!req.user.lists.id(req.params.listId).items.id(req.params.itemId)) {
+        res.status(400).json({message: 'Nie istnieje produkt o podanym id'});
+        return;
+    }
+    req.user.lists.id(req.params.listId).items.pull(req.params.itemId);
+    req.user.save(err => {
+        if(err) {
+            console.log(err);
+            res.status(500).json({message: 'Nie można usunąć produktu'});
+        } else {
+            res.sendStatus(200);
+        }
+    });
 }
