@@ -42,10 +42,12 @@
                 :title="activeList.name"
                 :add="addToSelected"
                 :products="activeList.items"
+                :lists="lists"
                 @selectProduct="selectProduct"
                 @removeProduct="removeProduct"
                 @modifyProduct="modifyProduct"
                 @addProduct="addProduct"
+                @refresh="refresh"
             ></ProductList>
         </Content>
     </main>

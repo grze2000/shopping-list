@@ -13,7 +13,7 @@
             </div>
         </h3>
         <ul class="product-list">
-            <li v-for="product in orderedProducts" :key="product.name" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product)">
+            <li v-for="product in orderedProducts" :key="product._id" @click="product.bought = !product.bought; $emit('selectProduct', product._id)" :class="{checked: product.bought}" @contextmenu="$refs.productContextMenu.open($event, product)">
                 <div class="checkbox"></div>
                 <div class="product-content">
                     {{ product.name}}{{ product.price ? ` (${(product.quantity > 1 ? product.quantity+'x ' : '')}${product.price} zł)` : '' }}
@@ -30,20 +30,30 @@
         <h4 class="product-list-title" v-else>
             Brak produktów
         </h4>
-        <vue-context ref="productContextMenu">
+        <vue-context ref="productContextMenu" :close-on-click="false" @close="moveCtxMenu = false">
             <template slot-scope="product" v-if="product.data">
-                <li>
-                    <a :href="product.data.firstURL" target="_blank" v-if="product.data.firstURL !== ''">{{ 'Przejdź do '+product.data.firstURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
-                </li>
-                <li>
-                    <a :href="product.data.secondURL" target="_blank" v-if="product.data.secondURL !== ''">{{ 'Przejdź do '+product.data.secondURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
-                </li>
-                <li>
-                    <a href="#" @click.prevent="$emit('modifyProduct', product.data._id)">Edytuj</a>
-                </li>
-                <li>
-                    <a href="#" @click.prevent="$emit('removeProduct', product.data._id)">Usuń</a>
-                </li>
+                <template v-if="moveCtxMenu">
+                    <li v-for="list in lists" :key="list._id">
+                        <a href="#" @click.prevent="move(product.data, list._id)">{{ list.name }}</a>
+                    </li>
+                </template>
+                <template v-else>
+                    <li>
+                        <a :href="product.data.firstURL" target="_blank" v-if="product.data.firstURL !== ''">{{ 'Przejdź do '+product.data.firstURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
+                    </li>
+                    <li>
+                        <a :href="product.data.secondURL" target="_blank" v-if="product.data.secondURL !== ''">{{ 'Przejdź do '+product.data.secondURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
+                    </li>
+                    <li>
+                        <a href="#" @click.prevent="moveCtxMenu = true">Przenieś</a>
+                    </li>
+                    <li>
+                        <a href="#" @click.prevent="$refs.productContextMenu.close(); $emit('modifyProduct', product.data._id)">Edytuj</a>
+                    </li>
+                    <li>
+                        <a href="#" @click.prevent="$refs.productContextMenu.close(); $emit('removeProduct', product.data._id)">Usuń</a>
+                    </li>
+                </template>
             </template>
         </vue-context>
     </section>
@@ -56,7 +66,7 @@ import axios from 'axios'
 
 export default {
     name: 'ProductList',
-    props: ['title', 'products', 'add'],
+    props: ['title', 'products', 'add', 'lists'],
     components: {
         VueContext
     },
@@ -64,6 +74,7 @@ export default {
         return {
             sortSelect: false,
             sortType: 'name asc',
+            moveCtxMenu: false,
             sortTypes: [
                 {
                     value: 'name asc',
@@ -112,6 +123,18 @@ export default {
             .catch(err => {
                 console.error(err);
             })
+        },
+        move(productData, targetListId) {
+            const {listId, _id, ...product} = productData;
+            this.$refs.productContextMenu.close();
+            axios.all([
+                axios.post(`${process.env.VUE_APP_API_URL}/lists/${targetListId}/items`, product),
+                axios.delete(`${process.env.VUE_APP_API_URL}/lists/${listId}/items/${_id}`)
+            ]).then(() => {
+                this.$emit('refresh');
+            }).catch(err => {
+                console.log(err);
+            });
         }
     },
     computed: {
