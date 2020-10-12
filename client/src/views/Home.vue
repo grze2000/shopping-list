@@ -43,6 +43,7 @@
                 :add="addToSelected"
                 :products="activeList.items"
                 :lists="lists"
+                :selected="{id: selected, type: selectedType}"
                 @selectProduct="selectProduct"
                 @removeProduct="removeProduct"
                 @modifyProduct="modifyProduct"

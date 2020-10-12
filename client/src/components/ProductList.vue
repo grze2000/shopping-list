@@ -33,7 +33,7 @@
         <vue-context ref="productContextMenu" :close-on-click="false" @close="moveCtxMenu = false">
             <template slot-scope="product" v-if="product.data">
                 <template v-if="moveCtxMenu">
-                    <li v-for="list in lists" :key="list._id">
+                    <li v-for="list in lists.filter(x => x._id !== selected.id)" :key="list._id" >
                         <a href="#" @click.prevent="move(product.data, list._id)">{{ list.name }}</a>
                     </li>
                 </template>
@@ -44,7 +44,7 @@
                     <li>
                         <a :href="product.data.secondURL" target="_blank" v-if="product.data.secondURL !== ''">{{ 'Przejdź do '+product.data.secondURL.match(/^https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i)[2] }}</a>
                     </li>
-                    <li>
+                    <li v-if="selected.type === 'list'">
                         <a href="#" @click.prevent="moveCtxMenu = true">Przenieś</a>
                     </li>
                     <li>
@@ -66,7 +66,7 @@ import axios from 'axios'
 
 export default {
     name: 'ProductList',
-    props: ['title', 'products', 'add', 'lists'],
+    props: ['title', 'products', 'add', 'lists', 'selected'],
     components: {
         VueContext
     },
