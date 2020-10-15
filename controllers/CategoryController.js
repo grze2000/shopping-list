@@ -62,25 +62,20 @@ exports.renameCategory = (req, res) => {
 }
 
 exports.getItems = (req, res) => {
-    const category = req.user.categories.find(x => x._id.equals(req.params.categoryId));
-    if(category !== -1) {
-        var data = {
-            name: category.name,
-            items: [],
-            itemCount: 0
-        }
-        for(list of req.user.lists) {
-            for(item of list.items) {
-                if(req.params.categoryId == item.category) {
-                    data.items.push(Object.assign({listId: list._id}, item.toObject()));
-                }
+    const category = req.user.categories.id(req.params.categoryId);
+    if(!category) {
+        res.status(400).json({message: 'Nie istnieje kategoria o podanym id'});
+        return;
+    }
+    let items = [];
+    for(list of req.user.lists) {
+        for(item of list.items) {
+            if(req.params.categoryId == item.category) {
+                items.push(Object.assign({listId: list._id}, item.toObject()));
             }
         }
-        data.itemCount = data.items.length;
-        res.json(data);
-    } else {
-        res.status(400).json({message: 'Nie istnieje kategoria o podanym id'});
     }
+    res.json({...category.toObject(), items: items, itemCount: items.length});
 }
 
 exports.removeCategory = (req, res) => {
