@@ -172,6 +172,10 @@ export default {
             axios.delete(`${process.env.VUE_APP_API_URL}/lists/${id}`)
             .then(response => {
                 const index = this.lists.findIndex(x => x._id === id);
+                if(this.selected === this.activeList._id) {
+                    this.activeProduct = null;
+                    this.activeList = {name: undefined, items: []};
+                }
                 if(index !== -1) {
                     this.lists.splice(index, 1);
                 }
@@ -184,6 +188,10 @@ export default {
             axios.delete(`${process.env.VUE_APP_API_URL}/categories/${id}`)
             .then(response => {
                 const index = this.categories.findIndex(x => x._id === id);
+                if(this.selected === this.activeList._id) {
+                    this.activeProduct = null;
+                    this.activeList = {name: undefined, items: []};
+                }
                 if(index !== -1) {
                     this.categories.splice(index, 1);
                 }
@@ -207,6 +215,7 @@ export default {
                 axios.delete(`${process.env.VUE_APP_API_URL}/lists/${item.listId}/items/${id}`)
                 .then(response => {
                     this.refresh();
+
                 })
                 .catch(err => {
                     console.error(err);
