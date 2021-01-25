@@ -9,7 +9,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "lodash.orderby": "^4.6.0",
     "vue": "^2.6.12",
     "vue-context": "^5.2.0",
