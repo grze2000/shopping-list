@@ -16,24 +16,24 @@ exports.getCategories = (req, res) => {
 }
 
 exports.addCategory = (req, res) => {
-    if(req.body.name) {
-        if(nameRegex.test(req.body.name)) {
-            req.user.categories.push({
-                name: req.body.name
-            });
-            req.user.save(err => {
-                if(err) {
-                    res.status(500).json({message: 'Nie udało się utworzyć kategorii'});
-                } else {
-                    res.status(201).json([req.user.categories[req.user.categories.length-1]].map(x => ({_id: x._id, name: x.name, itemCount: 0}))[0]);
-                }
-            });
-        } else {
-            res.status(400).json({message: 'Nazwa zawiera niedozwolone znaki'});
-        }
-    } else {
+    if(!req.body.name) {
         res.status(400).json({message: 'Nie podano nazwy kategorii'});
+        return;
     }
+    if(!nameRegex.test(req.body.name)) {
+        res.status(400).json({message: 'Nazwa zawiera niedozwolone znaki'});
+        return;
+    }
+    req.user.categories.push({
+        name: req.body.name
+    });
+    req.user.save(err => {
+        if(err) {
+            res.status(500).json({message: 'Nie udało się utworzyć kategorii'});
+        } else {
+            res.status(201).json([req.user.categories[req.user.categories.length-1]].map(x => ({_id: x._id, name: x.name, itemCount: 0}))[0]);
+        }
+    });
 }
 
 exports.renameCategory = (req, res) => {
