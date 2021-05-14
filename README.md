@@ -5,7 +5,7 @@
 I also create electronic projects and often need to find and buy a lot of parts for my projects. I decided to create an application that will allow me to organize the list of products to buy, assign them links to stores and estimate the total cost of the project. This is my first Vue.js project.
 
 
-![](https://grzegorzbabiarz.com/img/shoppingList2.jpg)
+![](https://grzegorzbabiarz.com/public/img/shoppingList/shoppingList.jpg)
 
 ## Built With
 
